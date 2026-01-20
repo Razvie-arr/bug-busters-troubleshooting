@@ -1,11 +1,8 @@
 package memorizingtool;//Chapter 5
 
-import memorizingtool.printer.help.HelpPrinter;
-import memorizingtool.printer.help.WordHelpPrinter;
-
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -21,37 +18,10 @@ import java.util.regex.Pattern;
  * <p>
  * With the WordMemorize class in our toolkit, we can confidently keep track of important words and manipulate them as needed.
  */
-public class WordMemorize {
-
-    static ArrayList<String> list = new ArrayList<>();
-    static List<Object> args = new ArrayList<>();
-    static Map<String, Class<?>[]> commands;
-    boolean finished = false;
+public final class WordMemorize extends MemorizeBase<String> {
 
     public WordMemorize() {
-        list.clear();
-        commands = new HashMap<>();
-        commands.put("/help", new Class<?>[]{});
-        commands.put("/menu", new Class<?>[]{});
-        commands.put("/add", new Class<?>[]{String.class});
-        commands.put("/remove", new Class<?>[]{int.class});
-        commands.put("/replace", new Class<?>[]{int.class, String.class});
-        commands.put("/replaceAll", new Class<?>[]{String.class, String.class});
-        commands.put("/index", new Class<?>[]{String.class});
-        commands.put("/sort", new Class<?>[]{String.class});
-        commands.put("/frequency", new Class<?>[]{});
-        commands.put("/print", new Class<?>[]{int.class});
-        commands.put("/printAll", new Class<?>[]{String.class});
-        commands.put("/getRandom", new Class<?>[]{});
-        commands.put("/count", new Class<?>[]{String.class});
-        commands.put("/size", new Class<?>[]{});
-        commands.put("/equals", new Class<?>[]{int.class, int.class});
-        commands.put("/readFile", new Class<?>[]{String.class});
-        commands.put("/writeFile", new Class<?>[]{String.class});
-        commands.put("/clear", new Class<?>[]{});
-        commands.put("/compare", new Class<?>[]{int.class, int.class});
-        commands.put("/mirror", new Class<?>[]{});
-        commands.put("/unique", new Class<?>[]{});
+        super();
         commands.put("/concat", new Class<?>[]{int.class, int.class});
         commands.put("/swapCase", new Class<?>[]{int.class});
         commands.put("/upper", new Class<?>[]{int.class});
@@ -62,65 +32,8 @@ public class WordMemorize {
         commands.put("/regex", new Class<?>[]{String.class});
     }
 
-    //a satisfying click, the heavy doors slowly creaked open, revealing a dazzling...
-    void Run() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Scanner scanner = new Scanner(System.in);
-        while (!finished) {
-            args.clear();
-            System.out.println("Perform action:");
-            String[] data = scanner.nextLine().split(" ");
-
-            for (int i = 1; i < data.length; i++) {
-                if (commands.get(data[0])[i - 1].equals(int.class))
-                    args.add(Integer.parseInt(data[i]));
-                else {
-                    args.add(data[i]);
-                }
-            }
-            this.getClass().getDeclaredMethod(data[0].substring(1), commands.get(data[0])).invoke(this, args.toArray());
-        }
-    }
-
-    void help() {
-        HelpPrinter.printHelp();
-        WordHelpPrinter.printHelp();
-    }
-
-    void menu() {
-        this.finished = true;
-    }
-
-    void add(String element) {
-        list.add(element);
-        System.out.println("Element " + element + " added");
-    }
-
-    //chamber filled with sparkling jewels and ancient artifacts.
-    void remove(int index) {
-        list.remove(index);
-        System.out.println("Element on " + index + " position removed");
-    }
-
-    void replace(int index, String element) {
-        list.set(index, element);
-        System.out.println("Element on " + index + " position replaced with " + element);
-    }
-
-    void replaceAll(String from, String to) {
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).equals(from)) {
-                list.set(i, to);
-            }
-        }
-        System.out.println("Each " + from + " element replaced with " + to);
-    }
-
-    void index(String value) {
-        int i = list.indexOf(value);
-        System.out.println("First occurrence of " + value + " is on " + i + " position");
-    }
-
-    void sort(String way) {
+    @Override
+    protected void sort(String way) {
         for (int i = 0; i < list.size(); i++) {
             for (int j = i; j < list.size(); j++) {
                 if (list.get(i).compareTo(list.get(j)) > 0 && way.equals("ascending") || list.get(i).compareTo(list.get(j)) > 0 && way.equals(
@@ -134,97 +47,8 @@ public class WordMemorize {
         System.out.printf("Memory sorted %s\n", way);
     }
 
-    //And so, Lily's unwavering curiosity and determination led her to a treasure...
-    void frequency() {
-
-        Map<String, Long> counts = new HashMap<>();
-        for (String i : list) {
-            if (counts.get(i) == null) {
-                counts.put(i, 1L);
-            } else {
-                counts.put(i, counts.get(i) + 1);
-            }
-        }
-
-        System.out.println("Frequency:");
-        for (Map.Entry<String, Long> entry : counts.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue());
-        }
-    }
-
-    void print(int index) {
-        System.out.println("Element on " + index + " position is " + list.get(index));
-    }
-
-    //trove of knowledge and beauty. From that day forward, she became known as the village's greatest...
-    void getRandom() {
-        Random random = new Random();
-        System.out.println("Random element: " + list.get(random.nextInt(1)));
-    }
-
-    void printAll(String type) {
-        switch (type) {
-            case "asList":
-                System.out.println("List of elements:\n" + Arrays.toString(list.toArray()));
-                break;
-            case "lineByLine":
-                System.out.println("List of elements:\n");
-                for (String i : list) {
-                    System.out.println(i);
-                }
-                break;
-            case "oneLine":
-                System.out.println("List of elements:");
-                for (int i = 0; i < list.size() - 1; i++) {
-                    System.out.print(list.get(i) + " ");
-                }
-                if (list.size() > 0) System.out.print(list.get(list.size() - 1));
-                System.out.println();
-                break;
-        }
-    }
-
-    void count(String value) {
-        int amount = 0;
-        for (String i : list) {
-            if (i.equals(value)) {
-                amount++;
-            }
-        }
-        System.out.println("Amount of " + value + ": " + amount);
-    }
-
-    void size() {
-        System.out.println("Amount of elements: " + list.size());
-    }
-
-    void equals(int i, int j) {
-        boolean res = list.get(i).equals(list.get(j));
-        System.out.printf("%d and %d elements are%s equal: %s\n",
-                i, j, res ? "" : " not", list.get(i) + (res ? " = " : " != ") + list.get(j));
-    }
-
-    void readFile(String path) throws IOException {
-        FileReaderWords readerThread = new FileReaderWords();
-        ArrayList<String> list2 = readerThread.read(path);
-        for (String i : list2) {
-            list.add(i);
-        }
-        System.out.println("Data imported: " + (list.size()));
-    }
-
-    void writeFile(String path) throws IOException {
-        FileWriterWords writer = new FileWriterWords();
-        writer.write(path, list);
-        System.out.println("Data exported: " + list.size());
-    }
-
-    void clear() {
-        list.clear();
-        System.out.println("Data cleared");
-    }
-
-    void compare(int i, int j) {
+    @Override
+    protected void compare(int i, int j) {
         if (list.get(i).compareTo(list.get(j)) > 0) {
             System.out.println("Result: " + list.get(i) + " > " + list.get(j));
         } else if (list.get(i).compareTo(list.get(j)) < 0) {
@@ -232,30 +56,6 @@ public class WordMemorize {
         } else {
             System.out.println("Result: " + list.get(i) + " = " + list.get(j));
         }
-    }
-
-    void mirror() {
-        ArrayList<String> list2 = new ArrayList<>();
-        for (int i = list.size() - 1; i >= 0; i--) {
-            list2.add(list.get(i));
-        }
-        System.out.println("Data reversed");
-    }
-
-    void unique() {
-        Map<String, Long> counts = new HashMap<>();
-        for (String i : list) {
-            if (counts.get(i) == null) {
-                counts.put(i, 1L);
-            } else {
-                counts.put(i, counts.get(i) + 1);
-            }
-        }
-        ArrayList<String> list2 = new ArrayList<>();
-        for (Map.Entry<String, Long> entry : counts.entrySet()) {
-            list2.add(entry.getKey());
-        }
-        System.out.println("Unique values: " + Arrays.toString(list2.toArray()));
     }
 
     //explorer, sharing her discoveries and inspiring others to pursue their own adventures.

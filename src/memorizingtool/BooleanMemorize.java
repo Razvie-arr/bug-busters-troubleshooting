@@ -1,12 +1,5 @@
 package memorizingtool;//Chapter 1
 
-import memorizingtool.printer.help.BooleanHelpPrinter;
-import memorizingtool.printer.help.HelpPrinter;
-
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
-
 /**
  * It is all about memorizing Booleans. You see, regular Booleans are so forgetful!
  * They constantly change their value, and it's just too much for us to handle.
@@ -15,39 +8,11 @@ import java.util.*;
  * This class must be a lifesaver for forgetful programmers like me. No more worrying about Booleans changing unexpectedly.
  * We can now rely on the trustworthy BooleanMemorize class to keep our Booleans intact. I can't wait to use it in my next project!
  */
-public class BooleanMemorize {
-
-    static ArrayList<Boolean> list = new ArrayList<>();
-    static List<Object> args = new ArrayList<>();
-    static Map<String, Class<?>[]> commands;
-    boolean finished = false;
+public final class BooleanMemorize extends MemorizeBase<Boolean> {
 
     //Once upon a time in a small village nestled between rolling hills, there lived...
     public BooleanMemorize() {
-        list.clear();
-        commands = new HashMap<>();
-        commands.put("/help", new Class<?>[]{});
-        commands.put("/menu", new Class<?>[]{});
-        commands.put("/add", new Class<?>[]{Boolean.class});
-        commands.put("/remove", new Class<?>[]{int.class});
-        commands.put("/replace", new Class<?>[]{int.class, Boolean.class});
-        commands.put("/replaceAll", new Class<?>[]{Boolean.class, Boolean.class});
-        commands.put("/index", new Class<?>[]{Boolean.class});
-        commands.put("/sort", new Class<?>[]{String.class});
-        commands.put("/frequency", new Class<?>[]{});
-        commands.put("/print", new Class<?>[]{int.class});
-        commands.put("/printAll", new Class<?>[]{String.class});
-        commands.put("/getRandom", new Class<?>[]{});
-        commands.put("/count", new Class<?>[]{Boolean.class});
-        commands.put("/size", new Class<?>[]{});
-        commands.put("/equals", new Class<?>[]{int.class, int.class});
-        commands.put("/readFile", new Class<?>[]{String.class});
-        commands.put("/writeFile", new Class<?>[]{String.class});
-        commands.put("/clear", new Class<?>[]{});
-        commands.put("/compare", new Class<?>[]{int.class, int.class});
-        commands.put("/mirror", new Class<?>[]{});
-        commands.put("/unique", new Class<?>[]{});
-        commands.put("/flip", new Class<?>[]{int.class});
+        super();
         commands.put("/negateAll", new Class<?>[]{});
         commands.put("/and", new Class<?>[]{int.class, int.class});
         commands.put("/or", new Class<?>[]{int.class, int.class});
@@ -56,66 +21,8 @@ public class BooleanMemorize {
         commands.put("/morse", new Class<?>[]{});
     }
 
-    void Run() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Scanner scanner = new Scanner(System.in);
-        while (!finished) {
-            args.clear();
-            System.out.println("Perform action:");
-            String[] data = scanner.nextLine().split(" ");
-
-            for (int i = 1; i < data.length; i++) {
-                if (commands.get(data[0])[i - 1].equals(int.class))
-                    args.add(Integer.parseInt(data[i]));
-                else if (commands.get(data[0])[i - 1].equals(Boolean.class)) {
-                    args.add(data[i].equals("true"));
-                } else {
-                    args.add(data[i]);
-                }
-            }
-
-            this.getClass().getDeclaredMethod(data[0].substring(1), commands.get(data[0])).invoke(this, args.toArray());
-        }
-    }
-
-    void help() {//a curious young girl named Lily. Lily had a heart full of...
-        HelpPrinter.printHelp();
-        BooleanHelpPrinter.printHelp();
-    }
-
-    void menu() {
-        this.finished = true;
-    }
-
-    void add(Boolean element) {
-        list.add(element);
-        System.out.println("Element  " + element + "  added");
-    }
-
-    void remove(int index) {
-        list.remove(index);
-        System.out.println("Element on " + index + " position removed");
-    }
-
-    void replace(int index, Boolean element) {
-        list.set(index, element);
-        System.out.println("Element on " + index + " position replaced with " + element);
-    }
-
-    //adventure and a mind hungry for knowledge. Every day, she would wander through the...
-    void replaceAll(Boolean from, Boolean to) {
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).equals(from)) {
-                list.set(i, to);
-            }
-        }
-        System.out.println("Each " + from + " element replaced with " + to);
-    }
-
-    void index(Boolean value) {
-        System.out.println("First occurrence of " + value + " is on " + list.indexOf(value) + " position");
-    }
-
-    void sort(String way) {
+    @Override
+    protected void sort(String way) {
         for (int i = 0; i < list.size(); i++) {
             for (int j = i; j < list.size(); j++) {
                 if (list.get(i) && !list.get(j) && way.equals("ascending") || list.get(i) && !list.get(j) && way.equals("descending")) {
@@ -128,97 +35,8 @@ public class BooleanMemorize {
         System.out.printf("Memory sorted %s\n", way);
     }
 
-    void frequency() {
-        Map<Boolean, Long> counts = new HashMap<>();
-        for (Boolean b : list) {
-            if (counts.get(b) == null) {
-                counts.put(b, 1L);
-            } else {
-                counts.put(b, counts.get(b) + 1);
-            }
-        }
-
-        System.out.println("Frequency:");
-        for (Map.Entry<Boolean, Long> entry : counts.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue());
-        }
-    }
-
-    void print(int index) {
-        System.out.println("Element on " + index + " position is " + list.get(index));
-    }
-
-    void getRandom() {
-        Random random = new Random();
-        System.out.println("Random element: " + list.get(random.nextInt(1)));
-    }
-
-    void printAll(String type) {
-        switch (type) {
-            case "asList":
-                System.out.println("List of elements:\n" +
-                        Arrays.toString(list.toArray()));
-                break;
-            case "lineByLine":
-                System.out.println("List of elements:\n");
-                for (Boolean i : list) {
-                    System.out.println(i);
-                }
-                break;
-            case "oneLine":
-                System.out.println("List of elements:");
-                for (int i = 0; i < list.size() - 1; i++) {
-                    System.out.print(list.get(i) + " ");
-                }
-                if (list.size() > 0)
-                    System.out.print(list.get(list.size() - 1));
-                System.out.println();
-                break;
-        }
-    }
-
-    //village, observing the world around her and asking questions that often left the villagers perplexed...
-    void count(Boolean value) {
-        int amount = 0;
-        for (Boolean i : list) {
-            if (i == value) {
-                amount++;
-            }
-        }
-        System.out.println("Amount of " + value + ": " + amount);
-    }
-
-    void size() {
-        System.out.println("Amount of elements: " + list.size());
-    }
-
-    void equals(int i, int j) {
-        boolean res = list.get(i).equals(list.get(j));
-        System.out.printf("%d and %d elements are%s equal: %s\n",
-                i, j, res ? "" : " not", list.get(i) + (res ? " = " : " != ") + list.get(j));
-    }
-
-    void readFile(String path) throws IOException {
-        FileReaderBoolean readerThread = new FileReaderBoolean();
-        ArrayList<Boolean> list2 = readerThread.read(path);
-        for (Boolean i : list2) {
-            list.add(i);
-        }
-        System.out.println("Data imported: " + (list.size()));
-    }
-
-    void writeFile(String path) throws IOException {
-        FileWriterBoolean writer = new FileWriterBoolean();
-        writer.write(path, list);
-        System.out.println("Data exported: " + list.size());
-    }
-
-    void clear() {
-        list.clear();
-        System.out.println("Data cleared");
-    }
-
-    void compare(int i, int j) {
+    @Override
+    protected void compare(int i, int j) {
         if (list.get(i) && !list.get(j)) {
             System.out.println("Result: " + list.get(i) + " > " + list.get(j));
         } else if (!list.get(i) && list.get(j)) {
@@ -226,30 +44,6 @@ public class BooleanMemorize {
         } else {
             System.out.println("Result: " + list.get(i) + " = " + list.get(j));
         }
-    }
-
-    void mirror() {
-        ArrayList<Boolean> list2 = new ArrayList<>();
-        for (int i = list.size() - 1; i >= 0; i--) {
-            list2.add(list.get(i));
-        }
-        System.out.println("Data reversed");
-    }
-
-    void unique() {
-        Map<Boolean, Long> counts = new HashMap<>();
-        for (Boolean i : list) {
-            if (counts.get(i) == null) {
-                counts.put(i, 1L);
-            } else {
-                counts.put(i, counts.get(i) + 1);
-            }
-        }
-        ArrayList<Boolean> list2 = new ArrayList<>();
-        for (Map.Entry<Boolean, Long> entry : counts.entrySet()) {
-            list2.add(entry.getKey());
-        }
-        System.out.println("Unique values: " + Arrays.toString(list2.toArray()));
     }
 
     void flip(int index) {
