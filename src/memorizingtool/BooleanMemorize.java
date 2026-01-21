@@ -22,20 +22,6 @@ public final class BooleanMemorize extends MemorizeBase<Boolean> {
     }
 
     @Override
-    protected void sort(String way) {
-        for (int i = 0; i < list.size(); i++) {
-            for (int j = i; j < list.size(); j++) {
-                if (list.get(i) && !list.get(j) && way.equals("ascending") || list.get(i) && !list.get(j) && way.equals("descending")) {
-                    Boolean temp = list.get(i);
-                    list.set(i, list.get(j));
-                    list.set(j, temp);
-                }
-            }
-        }
-        System.out.printf("Memory sorted %s\n", way);
-    }
-
-    @Override
     protected void compare(int i, int j) {
         if (list.get(i) && !list.get(j)) {
             System.out.println("Result: " + list.get(i) + " > " + list.get(j));

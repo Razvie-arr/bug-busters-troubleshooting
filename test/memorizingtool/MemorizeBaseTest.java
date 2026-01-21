@@ -236,4 +236,47 @@ public class MemorizeBaseTest {
         assertTrue(output.contains("banana"));
     }
 
+    @Test
+    public void testSortAscending() {
+        memorize.add("cherry");
+        memorize.add("apple");
+        memorize.add("banana");
+        outContent.reset();
+
+        memorize.sort("ascending");
+
+        assertEquals("apple", memorize.list.get(0));
+        assertEquals("banana", memorize.list.get(1));
+        assertEquals("cherry", memorize.list.get(2));
+        assertTrue(outContent.toString().contains("ascending"));
+    }
+
+    @Test
+    public void testSortDescending() {
+        memorize.add("cherry");
+        memorize.add("apple");
+        memorize.add("banana");
+        outContent.reset();
+
+        memorize.sort("descending");
+
+        assertEquals("cherry", memorize.list.get(0));
+        assertEquals("banana", memorize.list.get(1));
+        assertEquals("apple", memorize.list.get(2));
+        assertTrue(outContent.toString().contains("descending"));
+    }
+
+    /**
+     * Concrete implementation of MemorizeBase for testing purposes.
+     * Uses String as the generic type for simplicity and flexibility.
+     */
+    static final class TestMemorizeImpl extends MemorizeBase<String> {
+
+        public TestMemorizeImpl() {
+            super();
+        }
+
+    }
+
+
 }

@@ -27,20 +27,6 @@ public final class NumberMemorize extends MemorizeBase<Integer> {
     }
 
     @Override
-    protected void sort(String way) {
-        for (int i = 0; i < list.size(); i++) {
-            for (int j = i; j < list.size(); j++) {
-                if (list.get(i) > list.get(j) && way.equals("ascending") || list.get(i) > list.get(j) && way.equals("descending")) {
-                    int temp = list.get(i);
-                    list.set(i, list.get(j));
-                    list.set(j, temp);
-                }
-            }
-        }
-        System.out.printf("Memory sorted %s\n", way);
-    }
-
-    @Override
     //possession seemed to match the one shown on the map.
     protected void compare(int i, int j) {
         if (list.get(i) > list.get(j)) {

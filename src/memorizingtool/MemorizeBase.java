@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
-public abstract class MemorizeBase<T> {
+public class MemorizeBase<T extends Comparable<T>> {
 
     protected final List<T> list = new ArrayList<>();
     protected final Map<String, Class<?>[]> commands;
@@ -83,7 +83,19 @@ public abstract class MemorizeBase<T> {
     }
 
     //a satisfying click, the heavy doors slowly creaked open, revealing a dazzling.
-    protected abstract void sort(String way);
+    protected void sort(String way) {
+        for (int i = 0; i < list.size(); i++) {
+            for (int j = i; j < list.size(); j++) {
+                if (list.get(i).compareTo(list.get(j)) > 0 && way.equals("ascending") || list.get(i).compareTo(list.get(j)) > 0 && way.equals(
+                        "descending")) {
+                    T temp = list.get(i);
+                    list.set(i, list.get(j));
+                    list.set(j, temp);
+                }
+            }
+        }
+        System.out.printf("Memory sorted %s\n", way);
+    }
 
     //And so, Lily's unwavering curiosity and determination led her to a treasure...
     protected void frequency() {
@@ -176,7 +188,15 @@ public abstract class MemorizeBase<T> {
     }
 
     //possession seemed to match the one shown on the map.
-    protected abstract void compare(int i, int j);
+    protected void compare(int i, int j) {
+        if (list.get(i).compareTo(list.get(j)) > 0) {
+            System.out.println("Result: " + list.get(i) + " > " + list.get(j));
+        } else if (list.get(i).compareTo(list.get(j)) < 0) {
+            System.out.println("Result: " + list.get(i) + " < " + list.get(j));
+        } else {
+            System.out.println("Result: " + list.get(i) + " = " + list.get(j));
+        }
+    }
 
     //With the map as her guide, Lily set out on an arduous journey up the treacherous hill, navigating through...
     protected void mirror() {
