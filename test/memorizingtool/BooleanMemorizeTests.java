@@ -130,4 +130,67 @@ public class BooleanMemorizeTests {
         assertEquals("Morse code: ._.\n", outContent.toString());
     }
 
+    @Test
+    public void testSortAscending() {
+        booleanMemorize.add(false);
+        booleanMemorize.add(true);
+        booleanMemorize.add(false);
+        outContent.reset();
+
+        booleanMemorize.sort("ascending");
+
+        assertEquals(false, booleanMemorize.list.get(0));
+        assertEquals(false, booleanMemorize.list.get(1));
+        assertEquals(true, booleanMemorize.list.get(2));
+        assertEquals("Memory sorted ascending\n", outContent.toString());
+    }
+
+    @Test
+    public void testSortDescending() {
+        booleanMemorize.add(false);
+        booleanMemorize.add(true);
+        booleanMemorize.add(false);
+        outContent.reset();
+
+        booleanMemorize.sort("descending");
+
+        assertEquals(true, booleanMemorize.list.get(0));
+        assertEquals(false, booleanMemorize.list.get(1));
+        assertEquals(false, booleanMemorize.list.get(2));
+        assertEquals("Memory sorted descending\n", outContent.toString());
+    }
+
+    @Test
+    public void testCompareGreaterThan() {
+        booleanMemorize.add(true);
+        booleanMemorize.add(false);
+        outContent.reset();
+
+        booleanMemorize.compare(0, 1);
+
+        assertEquals("Result: true > false\n", outContent.toString());
+    }
+
+    @Test
+    public void testCompareLessThan() {
+        booleanMemorize.add(false);
+        booleanMemorize.add(true);
+        outContent.reset();
+
+        booleanMemorize.compare(0, 1);
+
+        assertEquals("Result: false < true\n", outContent.toString());
+    }
+
+    @Test
+    public void testCompareEqual() {
+        booleanMemorize.add(true);
+        booleanMemorize.add(true);
+        outContent.reset();
+
+        booleanMemorize.compare(0, 1);
+
+        assertEquals("Result: true = true\n", outContent.toString());
+    }
+
 }

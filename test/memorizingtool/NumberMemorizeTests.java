@@ -29,7 +29,7 @@ public class NumberMemorizeTests {
     }
 
     @Test
-    public void testSort() {
+    public void testSortAscending() {
         numberMemorize.add(5);
         numberMemorize.add(2);
         numberMemorize.add(8);
@@ -46,7 +46,25 @@ public class NumberMemorizeTests {
     }
 
     @Test
-    public void testCompare() {
+    public void testSortDescending() {
+        numberMemorize.add(5);
+        numberMemorize.add(2);
+        numberMemorize.add(8);
+        numberMemorize.add(1);
+        outContent.reset();
+
+        numberMemorize.sort("descending");
+
+        assertEquals(8, (int) numberMemorize.list.get(0));
+        assertEquals(5, (int) numberMemorize.list.get(1));
+        assertEquals(2, (int) numberMemorize.list.get(2));
+        assertEquals(1, (int) numberMemorize.list.get(3));
+
+        assertEquals("Memory sorted descending\n", outContent.toString());
+    }
+
+    @Test
+    public void testCompareGreaterThan() {
         numberMemorize.add(10);
         numberMemorize.add(5);
         outContent.reset();
@@ -54,6 +72,28 @@ public class NumberMemorizeTests {
         numberMemorize.compare(0, 1);
 
         assertEquals("Result: 10 > 5\n", outContent.toString());
+    }
+
+    @Test
+    public void testCompareLessThan() {
+        numberMemorize.add(5);
+        numberMemorize.add(10);
+        outContent.reset();
+
+        numberMemorize.compare(0, 1);
+
+        assertEquals("Result: 5 < 10\n", outContent.toString());
+    }
+
+    @Test
+    public void testCompareEqual() {
+        numberMemorize.add(7);
+        numberMemorize.add(7);
+        outContent.reset();
+
+        numberMemorize.compare(0, 1);
+
+        assertEquals("Result: 7 = 7\n", outContent.toString());
     }
 
     @Test
@@ -163,6 +203,94 @@ public class NumberMemorizeTests {
         numberMemorize.average();
 
         assertEquals("Average of all elements: 20\n", outContent.toString());
+    }
+
+    @Test
+    public void testAverageFractional() {
+        numberMemorize.add(5);
+        numberMemorize.add(6);
+        outContent.reset();
+
+        numberMemorize.average();
+
+        assertEquals("Average of all elements: 5.5\n", outContent.toString());
+    }
+
+    @Test
+    public void testSumOverflow() {
+        numberMemorize.add(Integer.MAX_VALUE);
+        numberMemorize.add(1);
+        outContent.reset();
+
+        numberMemorize.sum(0, 1);
+
+        assertEquals("Calculation performed: 2147483647 + 1 = 2147483648\n", outContent.toString());
+    }
+
+    @Test
+    public void testSubtractUnderflow() {
+        numberMemorize.add(Integer.MIN_VALUE);
+        numberMemorize.add(1);
+        outContent.reset();
+
+        numberMemorize.subtract(0, 1);
+
+        assertEquals("Calculation performed: -2147483648 - 1 = -2147483649\n", outContent.toString());
+    }
+
+    @Test
+    public void testMultiplyOverflow() {
+        numberMemorize.add(100000);
+        numberMemorize.add(100000);
+        outContent.reset();
+
+        numberMemorize.multiply(0, 1);
+
+        assertEquals("Calculation performed: 100000 * 100000 = 10000000000\n", outContent.toString());
+    }
+
+    @Test
+    public void testDivideFractionalResult() {
+        numberMemorize.add(10);
+        numberMemorize.add(3);
+        outContent.reset();
+
+        numberMemorize.divide(0, 1);
+
+        assertEquals("Calculation performed: 10 / 3 = 3.333333\n", outContent.toString());
+    }
+
+    @Test
+    public void testPowOverflow() {
+        numberMemorize.add(1000);
+        numberMemorize.add(10);
+        outContent.reset();
+
+        numberMemorize.pow(0, 1);
+
+        assertEquals("Calculation performed: 1000 ^ 10 = 1000000000000000000\n", outContent.toString());
+    }
+
+    @Test
+    public void testPowFractionalBase() {
+        numberMemorize.add(2);
+        numberMemorize.add(-2);
+        outContent.reset();
+
+        numberMemorize.pow(0, 1);
+
+        assertEquals("Calculation performed: 2 ^ -2 = 0.25\n", outContent.toString());
+    }
+
+    @Test
+    public void testSumAllOverflow() {
+        numberMemorize.add(Integer.MAX_VALUE);
+        numberMemorize.add(Integer.MAX_VALUE);
+        outContent.reset();
+
+        numberMemorize.sumAll();
+
+        assertEquals("Sum of all elements: 4294967294\n", outContent.toString());
     }
 
 }
