@@ -72,18 +72,8 @@ public final class BooleanMemorize extends MemorizeBase<Boolean> {
     }
 
     void logShift(int n) {
-        int outputValue = n;
-        int size = list.size();
-
-        if (size == 0) {
-            return;
-        }
-        n %= size;
-        if (n < 0) {
-            n += size;
-        }
-        Collections.rotate(list, -n);
-        System.out.println("Elements shifted by " + outputValue);
+        Collections.rotate(list, n);
+        System.out.println("Elements shifted by " + n);
     }
 
     void convertTo(String type) {

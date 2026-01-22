@@ -9,7 +9,9 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -89,10 +91,13 @@ public class BooleanMemorizeTests {
         }
         outContent.reset();
 
+        // expected result after rotating right by 1
+        List<Boolean> expected = new ArrayList<>(booleanMemorize.list);
+        Collections.rotate(expected, 1);
+
         booleanMemorize.logShift(1);
 
-        assertEquals(false, booleanMemorize.list.get(0));
-        assertEquals(true, booleanMemorize.list.get(7));
+        assertEquals(expected, booleanMemorize.list);
         assertEquals("Elements shifted by 1\n", outContent.toString());
     }
 
