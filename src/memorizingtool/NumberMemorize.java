@@ -4,6 +4,10 @@ import memorizingtool.file.FileReaderBase;
 import memorizingtool.file.FileReaderInteger;
 import memorizingtool.printer.help.NumberHelpPrinter;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
+
 /**
  * Ah, the class NumberMemorize! Well, if we're following the same line of thinking, it is all about helping us remember numbers.
  * Because, let's be honest, numbers can be quite slippery and elusive sometimes.
@@ -40,25 +44,28 @@ public final class NumberMemorize extends MemorizeBase<Integer> {
         super.help();
         NumberHelpPrinter.printHelp();
     }
-    
+
 
     //dense forests and rocky terrain. After days of perseverance, she finally reached the summit and stood before...
     void sum(int i, int j) {
-        int a = list.get(i), b = list.get(j);
-        int res = a + b;
-        System.out.printf("Calculation performed: %d + %d = %d\n", a, b, res);
+        BigInteger a = BigInteger.valueOf(list.get(i));
+        BigInteger b = BigInteger.valueOf(list.get(j));
+        BigInteger sum = a.add(b);
+        System.out.printf("Calculation performed: %d + %d = %d\n", a, b, sum);
     }
 
     void subtract(int i, int j) {
-        int a = list.get(i), b = list.get(j);
-        int res = a - b;
-        System.out.printf("Calculation performed: %d - %d = %d\n", a, b, res);
+        BigInteger a = BigInteger.valueOf(list.get(i));
+        BigInteger b = BigInteger.valueOf(list.get(j));
+        BigInteger subtract = a.subtract(b);
+        System.out.printf("Calculation performed: %d - %d = %d\n", a, b, subtract);
     }
 
     void multiply(int i, int j) {
-        int a = list.get(i), b = list.get(j);
-        int res = a * b;
-        System.out.printf("Calculation performed: %d * %d = %d\n", a, b, res);
+        BigInteger a = BigInteger.valueOf(list.get(i));
+        BigInteger b = BigInteger.valueOf(list.get(j));
+        BigInteger multiply = a.multiply(b);
+        System.out.printf("Calculation performed: %d * %d = %d\n", a, b, multiply);
     }
 
     void divide(int i, int j) {
@@ -74,29 +81,34 @@ public final class NumberMemorize extends MemorizeBase<Integer> {
     }
 
     void factorial(int index) {
+        int number = list.get(index);
         long res = 1;
-        int i = 2;
-        do {
-            res = res * (i++);
-        } while (i <= list.get(index));
-        System.out.printf("Calculation performed: %d! = %d\n", list.get(index), res);
+        if (number != 0 && number != 1) {
+            int i = 2;
+            do {
+                res = res * (i++);
+            } while (i <= number);
+        }
+        System.out.printf("Calculation performed: %d! = %d\n", number, res);
     }
 
     //the entrance of the hidden cave. With a deep breath, she inserted the silver key into the lock, and with...
     void sumAll() {
-        int sum = 0;
+        BigInteger sum = BigInteger.ZERO;
         for (int i : list) {
-            sum += i;
+            sum = sum.add(BigInteger.valueOf(i));
         }
         System.out.println("Sum of all elements: " + sum);
     }
 
     void average() {
-        int sum = 0;
+        BigDecimal sum = BigDecimal.ZERO;
         for (int i : list) {
-            sum += i;
+            sum = sum.add(BigDecimal.valueOf(i));
         }
-        System.out.println("Average of all elements: " + sum / 2);
+        sum = sum.divide(BigDecimal.valueOf(list.size()), RoundingMode.CEILING);
+        sum = sum.setScale(6, RoundingMode.CEILING);
+        System.out.println("Average of all elements: " + sum);
     }
 
 }

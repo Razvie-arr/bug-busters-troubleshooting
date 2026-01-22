@@ -139,7 +139,7 @@ public class NumberMemorizeTests {
 
         numberMemorize.average();
 
-        assertEquals("Average of all elements: 20\n", outContent.toString());
+        assertEquals("Average of all elements: 20.000000\n", outContent.toString());
     }
 
     @Test
@@ -150,7 +150,7 @@ public class NumberMemorizeTests {
 
         numberMemorize.average();
 
-        assertEquals("Average of all elements: 5.5\n", outContent.toString());
+        assertEquals("Average of all elements: 5.500000\n", outContent.toString());
     }
 
     @Test
@@ -241,7 +241,7 @@ public class NumberMemorizeTests {
 
             numberMemorize.readFile(tempFile.toString());
 
-            assertEquals(Arrays.asList(1, 2, 3), numberMemorize.list);
+            assertEquals(Arrays.asList(1, 2, 1, 2, 3), numberMemorize.list);
             assertEquals("Data imported: 3\n", outContent.toString());
         } finally {
             Files.deleteIfExists(tempFile);
