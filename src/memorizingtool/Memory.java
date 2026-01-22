@@ -14,28 +14,25 @@ class Memory {
 
     public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
-        BooleanMemorize booleanMemorize = new BooleanMemorize();
-        NumberMemorize numberMemorize = new NumberMemorize();
-        WordMemorize wordMemorize = new WordMemorize();
 
         while (true) {
-            System.out.println("Welcome to Data Memory!\n" +
-
-                    "Possible actions:\n" +
-                    "1. Memorize booleans\n" +
-                    "2. Memorize numbers\n" +
-                    "3. Memorize words\n" +
-                    "0. Quit");
+            System.out.println("""
+                    Welcome to Data Memory!
+                    Possible actions:
+                    1. Memorize booleans
+                    2. Memorize numbers
+                    3. Memorize words
+                    0. Quit""");
             String choice = scanner.next();
             switch (choice) {
                 case "1":
-                    booleanMemorize.Run();
+                    new BooleanMemorize().Run();
                     break;
                 case "2":
-                    numberMemorize.Run();
+                    new NumberMemorize().Run();
                     break;
                 case "3":
-                    wordMemorize.Run();
+                    new WordMemorize().Run();
                     break;
                 case "0":
                     return;

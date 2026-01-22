@@ -5,48 +5,61 @@ import memorizingtool.file.FileReaderBase;
 import memorizingtool.printer.help.HelpPrinter;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public abstract class MemorizeBase<T extends Comparable<T>> {
 
-    protected final Map<String, Class<?>[]> commands;
-    private final Class<T> elementType;
+    private final Map<String, Command> dispatcher = new HashMap<>();
     protected List<T> list = new ArrayList<>();
     protected boolean finished = false;
 
-    public MemorizeBase(Class<T> elementType) {
-        this.elementType = elementType;
-        commands = new HashMap<>();
-        fillGeneralCommands();
+    public MemorizeBase() {
+        registerBaseCommands();
+        registerTypeCommands(dispatcher);
     }
 
-    //a satisfying click, the heavy doors slowly creaked open, revealing a dazzling...
-    void Run() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    protected abstract T parseElement(String value);
+
+    void Run() throws Exception {
         Scanner scanner = new Scanner(System.in);
         while (!finished) {
-            List<Object> args = new ArrayList<>();
             System.out.println("Perform action:");
             String[] data = scanner.nextLine().split(" ");
-
-            for (int i = 1; i < data.length; i++) {
-                if (commands.get(data[0])[i - 1].equals(int.class))
-                    args.add(Integer.parseInt(data[i]));
-                else if (commands.get(data[0])[i - 1].equals(Boolean.class))
-                    args.add(data[i].equals("true"));
-                else args.add(data[i]);
+            Command command = dispatcher.get(data[0]);
+            if (command != null) {
+                command.run(data);
             }
-
-            Class<?>[] paramTypes = Arrays.stream(commands.get(data[0]))
-                    .map(c -> c == elementType ? Comparable.class : c)
-                    .toArray(Class<?>[]::new);
-
-            this.getClass().getMethod(data[0].substring(1), paramTypes).invoke(this, args.toArray());
         }
     }
 
+    private void registerBaseCommands() {
+        dispatcher.put("/help", parts -> help());
+        dispatcher.put("/menu", parts -> menu());
+        dispatcher.put("/add", parts -> add(parseElement(parts[1])));
+        dispatcher.put("/remove", parts -> remove(Integer.parseInt(parts[1])));
+        dispatcher.put("/replace", parts -> replace(Integer.parseInt(parts[1]), parseElement(parts[2])));
+        dispatcher.put("/replaceAll", parts -> replaceAll(parseElement(parts[1]), parseElement(parts[2])));
+        dispatcher.put("/index", parts -> index(parseElement(parts[1])));
+        dispatcher.put("/sort", parts -> sort(parts[1]));
+        dispatcher.put("/frequency", parts -> frequency());
+        dispatcher.put("/print", parts -> print(Integer.parseInt(parts[1])));
+        dispatcher.put("/printAll", parts -> printAll(parts[1]));
+        dispatcher.put("/getRandom", parts -> getRandom());
+        dispatcher.put("/count", parts -> count(parseElement(parts[1])));
+        dispatcher.put("/size", parts -> size());
+        dispatcher.put("/equals", parts -> equals(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
+        dispatcher.put("/clear", parts -> clear());
+        dispatcher.put("/compare", parts -> compare(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
+        dispatcher.put("/mirror", parts -> mirror());
+        dispatcher.put("/unique", parts -> unique());
+        dispatcher.put("/readFile", parts -> readFile(parts[1]));
+        dispatcher.put("/writeFile", parts -> writeFile(parts[1]));
+    }
+
+    protected abstract void registerTypeCommands(Map<String, Command> registry);
+
     //for any mention of a hidden treasure or a forgotten secret that might hold the key to her discovery.
-    protected void help() { //a curious young girl named Lily. Lily had a heart full of...
+    public void help() { //a curious young girl named Lily. Lily had a heart full of...
         HelpPrinter.printHelp();
     }
 
@@ -65,7 +78,6 @@ public abstract class MemorizeBase<T extends Comparable<T>> {
         list.remove(index);
         System.out.println("Element on " + index + " position removed");
     }
-
 
     public void replace(int index, T element) {
         list.set(index, element);
@@ -146,8 +158,8 @@ public abstract class MemorizeBase<T extends Comparable<T>> {
                 for (int i = 0; i < list.size() - 1; i++) {
                     System.out.print(list.get(i) + " ");
                 }
-                if (list.size() > 0)
-                    System.out.print(list.get(list.size() - 1));
+                if (!list.isEmpty())
+                    System.out.print(list.getLast());
                 System.out.println();
                 break;
         }
@@ -231,30 +243,11 @@ public abstract class MemorizeBase<T extends Comparable<T>> {
         System.out.println("Unique values: " + Arrays.toString(list2.toArray()));
     }
 
-    private void fillGeneralCommands() {
-        commands.put("/help", new Class<?>[]{});
-        commands.put("/menu", new Class<?>[]{});
-        commands.put("/add", new Class<?>[]{elementType});
-        commands.put("/remove", new Class<?>[]{int.class});
-        commands.put("/replace", new Class<?>[]{int.class, elementType});
-        commands.put("/replaceAll", new Class<?>[]{elementType, elementType});
-        commands.put("/index", new Class<?>[]{elementType});
-        commands.put("/sort", new Class<?>[]{String.class});
-        commands.put("/frequency", new Class<?>[]{});
-        commands.put("/print", new Class<?>[]{int.class});
-        commands.put("/printAll", new Class<?>[]{String.class});
-        commands.put("/getRandom", new Class<?>[]{});
-        commands.put("/count", new Class<?>[]{elementType});
-        commands.put("/size", new Class<?>[]{});
-        commands.put("/equals", new Class<?>[]{int.class, int.class});
+    @FunctionalInterface
+    protected interface Command {
 
-        commands.put("/clear", new Class<?>[]{});
-        commands.put("/compare", new Class<?>[]{int.class, int.class});
-        commands.put("/mirror", new Class<?>[]{});
-        commands.put("/unique", new Class<?>[]{});
+        void run(String[] parts) throws Exception;
 
-        commands.put("/readFile", new Class<?>[]{String.class});
-        commands.put("/writeFile", new Class<?>[]{String.class});
     }
 
 }

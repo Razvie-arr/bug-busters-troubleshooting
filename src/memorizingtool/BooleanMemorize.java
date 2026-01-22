@@ -5,6 +5,7 @@ import memorizingtool.file.FileReaderBoolean;
 import memorizingtool.printer.help.BooleanHelpPrinter;
 
 import java.util.Collections;
+import java.util.Map;
 
 /**
  * It is all about memorizing Booleans. You see, regular Booleans are so forgetful!
@@ -18,13 +19,7 @@ public final class BooleanMemorize extends MemorizeBase<Boolean> {
 
     //Once upon a time in a small village nestled between rolling hills, there lived...
     public BooleanMemorize() {
-        super(Boolean.class);
-        commands.put("/negateAll", new Class<?>[]{});
-        commands.put("/and", new Class<?>[]{int.class, int.class});
-        commands.put("/or", new Class<?>[]{int.class, int.class});
-        commands.put("/logShift", new Class<?>[]{int.class});
-        commands.put("/convertTo", new Class<?>[]{String.class});
-        commands.put("/morse", new Class<?>[]{});
+        super();
     }
 
     @Override
@@ -33,9 +28,25 @@ public final class BooleanMemorize extends MemorizeBase<Boolean> {
     }
 
     @Override
-    protected void help() {
+    public void help() {
         super.help();
         BooleanHelpPrinter.printHelp();
+    }
+
+    @Override
+    protected void registerTypeCommands(Map<String, Command> registry) {
+        registry.put("/flip", parts -> flip(Integer.parseInt(parts[1])));
+        registry.put("/negateAll", parts -> negateAll());
+        registry.put("/and", parts -> and(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
+        registry.put("/or", parts -> or(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
+        registry.put("/logShift", parts -> logShift(Integer.parseInt(parts[1])));
+        registry.put("/convertTo", parts -> convertTo(parts[1]));
+        registry.put("/morse", parts -> morse());
+    }
+
+    @Override
+    protected Boolean parseElement(String value) {
+        return Boolean.valueOf(value);
     }
 
     void flip(int index) {

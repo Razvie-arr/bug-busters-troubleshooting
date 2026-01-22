@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -36,7 +37,7 @@ public class MemorizeBaseTest {
         memorize.add("apple");
 
         assertEquals(1, memorize.list.size());
-        assertEquals("apple", memorize.list.get(0));
+        assertEquals("apple", memorize.list.getFirst());
         assertEquals("Element apple added\n", outContent.toString());
     }
 
@@ -49,7 +50,7 @@ public class MemorizeBaseTest {
         memorize.remove(0);
 
         assertEquals(1, memorize.list.size());
-        assertEquals("banana", memorize.list.get(0));
+        assertEquals("banana", memorize.list.getFirst());
         assertEquals("Element on 0 position removed\n", outContent.toString());
     }
 
@@ -60,7 +61,7 @@ public class MemorizeBaseTest {
 
         memorize.replace(0, "cherry");
 
-        assertEquals("cherry", memorize.list.get(0));
+        assertEquals("cherry", memorize.list.getFirst());
         assertEquals("Element on 0 position replaced with cherry\n", outContent.toString());
     }
 
@@ -274,7 +275,17 @@ public class MemorizeBaseTest {
     static final class TestMemorizeImpl extends MemorizeBase<String> {
 
         public TestMemorizeImpl() {
-            super(String.class);
+            super();
+        }
+
+        @Override
+        protected String parseElement(String value) {
+            return value;
+        }
+
+        @Override
+        protected void registerTypeCommands(Map<String, Command> registry) {
+            // No type-specific commands for testing
         }
 
         @Override

@@ -7,6 +7,7 @@ import memorizingtool.printer.help.WordHelpPrinter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -25,15 +26,7 @@ import java.util.regex.Pattern;
 public final class WordMemorize extends MemorizeBase<String> {
 
     public WordMemorize() {
-        super(String.class);
-        commands.put("/concat", new Class<?>[]{int.class, int.class});
-        commands.put("/swapCase", new Class<?>[]{int.class});
-        commands.put("/upper", new Class<?>[]{int.class});
-        commands.put("/lower", new Class<?>[]{int.class});
-        commands.put("/reverse", new Class<?>[]{int.class});
-        commands.put("/length", new Class<?>[]{int.class});
-        commands.put("/join", new Class<?>[]{String.class});
-        commands.put("/regex", new Class<?>[]{String.class});
+        super();
     }
 
     @Override
@@ -42,9 +35,26 @@ public final class WordMemorize extends MemorizeBase<String> {
     }
 
     @Override
-    protected void help() {
+    public void help() {
         super.help();
         WordHelpPrinter.printHelp();
+    }
+
+    @Override
+    protected void registerTypeCommands(Map<String, Command> registry) {
+        registry.put("/concat", parts -> concat(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
+        registry.put("/swapCase", parts -> swapCase(Integer.parseInt(parts[1])));
+        registry.put("/upper", parts -> upper(Integer.parseInt(parts[1])));
+        registry.put("/lower", parts -> lower(Integer.parseInt(parts[1])));
+        registry.put("/reverse", parts -> reverse(Integer.parseInt(parts[1])));
+        registry.put("/length", parts -> length(Integer.parseInt(parts[1])));
+        registry.put("/join", parts -> join(parts[1]));
+        registry.put("/regex", parts -> regex(parts[1]));
+    }
+
+    @Override
+    protected String parseElement(String value) {
+        return value;
     }
 
     //explorer, sharing her discoveries and inspiring others to pursue their own adventures.

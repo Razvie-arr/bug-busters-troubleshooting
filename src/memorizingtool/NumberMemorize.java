@@ -7,6 +7,7 @@ import memorizingtool.printer.help.NumberHelpPrinter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.util.Map;
 
 /**
  * Ah, the class NumberMemorize! Well, if we're following the same line of thinking, it is all about helping us remember numbers.
@@ -23,15 +24,7 @@ public final class NumberMemorize extends MemorizeBase<Integer> {
 
     //that the mysterious key belonged to. She spent days poring over books in the village library, searching...
     public NumberMemorize() {
-        super(Integer.class);
-        commands.put("/sum", new Class<?>[]{int.class, int.class});
-        commands.put("/subtract", new Class<?>[]{int.class, int.class});
-        commands.put("/multiply", new Class<?>[]{int.class, int.class});
-        commands.put("/divide", new Class<?>[]{int.class, int.class});
-        commands.put("/pow", new Class<?>[]{int.class, int.class});
-        commands.put("/factorial", new Class<?>[]{int.class});
-        commands.put("/sumAll", new Class<?>[]{});
-        commands.put("/average", new Class<?>[]{});
+        super();
     }
 
     @Override
@@ -40,9 +33,26 @@ public final class NumberMemorize extends MemorizeBase<Integer> {
     }
 
     @Override
-    protected void help() {
+    public void help() {
         super.help();
         NumberHelpPrinter.printHelp();
+    }
+
+    @Override
+    protected void registerTypeCommands(Map<String, Command> registry) {
+        registry.put("/sum", parts -> sum(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
+        registry.put("/subtract", parts -> subtract(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
+        registry.put("/multiply", parts -> multiply(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
+        registry.put("/divide", parts -> divide(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
+        registry.put("/pow", parts -> pow(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
+        registry.put("/factorial", parts -> factorial(Integer.parseInt(parts[1])));
+        registry.put("/sumAll", parts -> sumAll());
+        registry.put("/average", parts -> average());
+    }
+
+    @Override
+    protected Integer parseElement(String value) {
+        return Integer.valueOf(value);
     }
 
 
