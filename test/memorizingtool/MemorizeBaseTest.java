@@ -168,7 +168,8 @@ public class MemorizeBaseTest {
         memorize.add("banana");
         outContent.reset();
 
-        memorize.count("apple");
+        // to force equals method usage, to avoid getting it from string pool
+        memorize.count(new String("apple"));
 
         assertEquals("Amount of apple: 2\n", outContent.toString());
     }

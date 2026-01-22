@@ -169,7 +169,7 @@ public abstract class MemorizeBase<T extends Comparable<T>> {
     public void count(T value) {
         int amount = 0;
         for (T i : list) {
-            if (i == value) {
+            if (i.equals(value)) {
                 amount++;
             }
         }
