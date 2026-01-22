@@ -139,7 +139,7 @@ public class NumberMemorizeTests {
 
         numberMemorize.average();
 
-        assertEquals("Average of all elements: 20.000000\n", outContent.toString());
+        assertEquals("Average of all elements: 20\n", outContent.toString());
     }
 
     @Test
@@ -150,7 +150,7 @@ public class NumberMemorizeTests {
 
         numberMemorize.average();
 
-        assertEquals("Average of all elements: 5.500000\n", outContent.toString());
+        assertEquals("Average of all elements: 5.5\n", outContent.toString());
     }
 
     @Test
@@ -205,7 +205,7 @@ public class NumberMemorizeTests {
 
         numberMemorize.pow(0, 1);
 
-        assertEquals("Calculation performed: 1000 ^ 10 = 1000000000000000000\n", outContent.toString());
+        assertEquals("Calculation performed: 1000 ^ 10 = 1000000000000000000000000000000\n", outContent.toString());
     }
 
     @Test

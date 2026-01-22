@@ -79,15 +79,23 @@ public final class NumberMemorize extends MemorizeBase<Integer> {
     }
 
     void divide(int i, int j) {
-        int a = list.get(i), b = list.get(j);
-        int res = a / b;
-        System.out.printf("Calculation performed: %d / %d = %d\n", a, b, res);
+        BigDecimal a = BigDecimal.valueOf(list.get(i));
+        BigDecimal b = BigDecimal.valueOf(list.get(j));
+        BigDecimal res = a.divide(b, 6, RoundingMode.HALF_UP).stripTrailingZeros();
+        System.out.printf("Calculation performed: %s / %s = %s%n", a.toPlainString(), b.toPlainString(), res.toPlainString());
     }
 
     void pow(int i, int j) {
-        int a = list.get(i), b = list.get(j);
-        long res = (long) Math.pow(a, b);
-        System.out.printf("Calculation performed: %d ^ %d = %d\n", a, b, res);
+        BigDecimal base = BigDecimal.valueOf(list.get(i));
+        int exponent = list.get(j);
+        BigDecimal res;
+        if (exponent >= 0) {
+            res = base.pow(exponent);
+        } else {
+            res = BigDecimal.ONE.divide(base.pow(-exponent), 6, RoundingMode.HALF_UP);
+        }
+        res = res.stripTrailingZeros();
+        System.out.printf("Calculation performed: %s ^ %d = %s%n", base.toPlainString(), exponent, res.toPlainString());
     }
 
     void factorial(int index) {
@@ -116,9 +124,8 @@ public final class NumberMemorize extends MemorizeBase<Integer> {
         for (int i : list) {
             sum = sum.add(BigDecimal.valueOf(i));
         }
-        sum = sum.divide(BigDecimal.valueOf(list.size()), RoundingMode.CEILING);
-        sum = sum.setScale(6, RoundingMode.CEILING);
-        System.out.println("Average of all elements: " + sum);
+        BigDecimal avg = sum.divide(BigDecimal.valueOf(list.size()), 6, RoundingMode.HALF_UP).stripTrailingZeros();
+        System.out.println("Average of all elements: " + avg.toPlainString());
     }
 
 }
