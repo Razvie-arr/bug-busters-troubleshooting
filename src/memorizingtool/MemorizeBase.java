@@ -10,9 +10,9 @@ import java.util.*;
 
 public abstract class MemorizeBase<T extends Comparable<T>> {
 
-    protected final List<T> list = new ArrayList<>();
     protected final Map<String, Class<?>[]> commands;
     private final Class<T> elementType;
+    protected List<T> list = new ArrayList<>();
     protected boolean finished = false;
 
     public MemorizeBase(Class<T> elementType) {
@@ -91,7 +91,7 @@ public abstract class MemorizeBase<T extends Comparable<T>> {
     public void sort(String way) {
         for (int i = 0; i < list.size(); i++) {
             for (int j = i; j < list.size(); j++) {
-                if (list.get(i).compareTo(list.get(j)) > 0 && way.equals("ascending") || list.get(i).compareTo(list.get(j)) > 0 && way.equals(
+                if (list.get(i).compareTo(list.get(j)) > 0 && way.equals("ascending") || list.get(i).compareTo(list.get(j)) < 0 && way.equals(
                         "descending")) {
                     T temp = list.get(i);
                     list.set(i, list.get(j));
@@ -126,7 +126,7 @@ public abstract class MemorizeBase<T extends Comparable<T>> {
     //trove of knowledge and beauty. From that day forward, she became known as the village's greatest...
     public void getRandom() {
         Random random = new Random();
-        System.out.println("Random element: " + list.get(random.nextInt(1)));
+        System.out.println("Random element: " + list.get(random.nextInt(list.size())));
     } //to hold the key to unlocking unimaginable wonders. The key in Lily's...
 
     public void printAll(String type) {
@@ -178,7 +178,7 @@ public abstract class MemorizeBase<T extends Comparable<T>> {
         FileReaderBase<T> reader = getReader();
         List<T> list2 = reader.read(path);
         list.addAll(list2);
-        System.out.println("Data imported: " + list.size());
+        System.out.println("Data imported: " + list2.size());
     }
 
     protected abstract FileReaderBase<T> getReader();
@@ -211,6 +211,7 @@ public abstract class MemorizeBase<T extends Comparable<T>> {
         for (int i = list.size() - 1; i >= 0; i--) {
             list2.add(list.get(i));
         }
+        list = list2;
         System.out.println("Data reversed");
     }
 

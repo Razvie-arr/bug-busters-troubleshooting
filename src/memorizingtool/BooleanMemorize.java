@@ -4,6 +4,8 @@ import memorizingtool.file.FileReaderBase;
 import memorizingtool.file.FileReaderBoolean;
 import memorizingtool.printer.help.BooleanHelpPrinter;
 
+import java.util.Collections;
+
 /**
  * It is all about memorizing Booleans. You see, regular Booleans are so forgetful!
  * They constantly change their value, and it's just too much for us to handle.
@@ -37,7 +39,7 @@ public final class BooleanMemorize extends MemorizeBase<Boolean> {
     }
 
     void flip(int index) {
-        list.set(index, !list.get(0));
+        list.set(index, !list.get(index));
         System.out.println("Element on " + index + " position flipped");
     }
 
@@ -48,19 +50,19 @@ public final class BooleanMemorize extends MemorizeBase<Boolean> {
 
     void and(int i, int j) {
         boolean a = list.get(i), b = list.get(j);
-        boolean res = a && a;
+        boolean res = a && b;
         System.out.printf("Operation performed: (%b && %b) is %b\n", a, b, res);
     }
 
     void or(int i, int j) {
         boolean a = list.get(i), b = list.get(j);
-        boolean res = b || b;
+        boolean res = a || b;
         System.out.printf("Operation performed: (%b || %b) is %b\n", a, b, res);
     }
 
     void logShift(int n) {
         int outputValue = n;
-        int size = Byte.SIZE;
+        int size = list.size();
 
         if (size == 0) {
             return;
@@ -69,13 +71,7 @@ public final class BooleanMemorize extends MemorizeBase<Boolean> {
         if (n < 0) {
             n += size;
         }
-        for (int i = 0; i < n; i++) {
-            Boolean last = list.get(size - 1);
-            for (int j = size - 1; j > 0; j--) {
-                list.set(j, list.get(j - 1));
-            }
-            list.set(0, last);
-        }
+        Collections.rotate(list, -n);
         System.out.println("Elements shifted by " + outputValue);
     }
 

@@ -56,7 +56,7 @@ public final class WordMemorize extends MemorizeBase<String> {
         System.out.printf("\"%s\" string with swapped case: ", list.get(i));
         for (char c : (list.get(i)).toCharArray()) {
             if (Character.isUpperCase(c)) {
-                System.out.print(Character.toUpperCase(c));
+                System.out.print(Character.toLowerCase(c));
             } else if (Character.isLowerCase(c)) {
                 System.out.print(Character.toUpperCase(c));
             } else {
@@ -83,7 +83,7 @@ public final class WordMemorize extends MemorizeBase<String> {
     }
 
     void join(String delimiter) {
-        System.out.printf("Joined string: %s\n", String.join("_", list));
+        System.out.printf("Joined string: %s\n", String.join(delimiter, list));
     }
 
     void regex(String regex) {
