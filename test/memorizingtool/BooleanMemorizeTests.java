@@ -6,6 +6,11 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -128,6 +133,42 @@ public class BooleanMemorizeTests {
         booleanMemorize.morse();
 
         assertEquals("Morse code: ._.\n", outContent.toString());
+    }
+
+    @Test
+    public void testReadFile() throws Exception {
+        booleanMemorize.add(true);
+        booleanMemorize.add(true);
+        Path tempFile = Files.createTempFile("boolean-memorize-read", ".txt");
+        try {
+            Files.write(tempFile, Arrays.asList("true", "false", "true"), StandardCharsets.UTF_8);
+            outContent.reset();
+
+            booleanMemorize.readFile(tempFile.toString());
+
+            assertEquals(Arrays.asList(true, true, true, false, true), booleanMemorize.list);
+            assertEquals("Data imported: 3\n", outContent.toString());
+        } finally {
+            Files.deleteIfExists(tempFile);
+        }
+    }
+
+    @Test
+    public void testWriteFile() throws Exception {
+        booleanMemorize.add(true);
+        booleanMemorize.add(false);
+        Path tempFile = Files.createTempFile("boolean-memorize-write", ".txt");
+        try {
+            outContent.reset();
+
+            booleanMemorize.writeFile(tempFile.toString());
+
+            List<String> lines = Files.readAllLines(tempFile, StandardCharsets.UTF_8);
+            assertEquals(Arrays.asList("true", "false"), lines);
+            assertEquals("Data exported: 2\n", outContent.toString());
+        } finally {
+            Files.deleteIfExists(tempFile);
+        }
     }
 
 }

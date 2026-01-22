@@ -1,5 +1,9 @@
 package memorizingtool;//Chapter 4
 
+import memorizingtool.file.FileReaderBase;
+import memorizingtool.file.FileReaderInteger;
+import memorizingtool.printer.help.NumberHelpPrinter;
+
 /**
  * Ah, the class NumberMemorize! Well, if we're following the same line of thinking, it is all about helping us remember numbers.
  * Because, let's be honest, numbers can be quite slippery and elusive sometimes.
@@ -15,7 +19,7 @@ public final class NumberMemorize extends MemorizeBase<Integer> {
 
     //that the mysterious key belonged to. She spent days poring over books in the village library, searching...
     public NumberMemorize() {
-        super();
+        super(Integer.class);
         commands.put("/sum", new Class<?>[]{int.class, int.class});
         commands.put("/subtract", new Class<?>[]{int.class, int.class});
         commands.put("/multiply", new Class<?>[]{int.class, int.class});
@@ -27,16 +31,16 @@ public final class NumberMemorize extends MemorizeBase<Integer> {
     }
 
     @Override
-    //possession seemed to match the one shown on the map.
-    protected void compare(int i, int j) {
-        if (list.get(i) > list.get(j)) {
-            System.out.println("Result: " + list.get(i) + " > " + list.get(j));
-        } else if (list.get(i) < list.get(j)) {
-            System.out.println("Result: " + list.get(i) + " < " + list.get(j));
-        } else {
-            System.out.println("Result: " + list.get(i) + " = " + list.get(j));
-        }
+    protected FileReaderBase<Integer> getReader() {
+        return new FileReaderInteger();
     }
+
+    @Override
+    protected void help() {
+        super.help();
+        NumberHelpPrinter.printHelp();
+    }
+    
 
     //dense forests and rocky terrain. After days of perseverance, she finally reached the summit and stood before...
     void sum(int i, int j) {

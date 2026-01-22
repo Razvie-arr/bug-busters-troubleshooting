@@ -1,5 +1,9 @@
 package memorizingtool;//Chapter 5
 
+import memorizingtool.file.FileReaderBase;
+import memorizingtool.file.FileReaderWords;
+import memorizingtool.printer.help.WordHelpPrinter;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,7 +25,7 @@ import java.util.regex.Pattern;
 public final class WordMemorize extends MemorizeBase<String> {
 
     public WordMemorize() {
-        super();
+        super(String.class);
         commands.put("/concat", new Class<?>[]{int.class, int.class});
         commands.put("/swapCase", new Class<?>[]{int.class});
         commands.put("/upper", new Class<?>[]{int.class});
@@ -33,14 +37,14 @@ public final class WordMemorize extends MemorizeBase<String> {
     }
 
     @Override
-    protected void compare(int i, int j) {
-        if (list.get(i).compareTo(list.get(j)) > 0) {
-            System.out.println("Result: " + list.get(i) + " > " + list.get(j));
-        } else if (list.get(i).compareTo(list.get(j)) < 0) {
-            System.out.println("Result: " + list.get(i) + " < " + list.get(j));
-        } else {
-            System.out.println("Result: " + list.get(i) + " = " + list.get(j));
-        }
+    protected FileReaderBase<String> getReader() {
+        return new FileReaderWords();
+    }
+
+    @Override
+    protected void help() {
+        super.help();
+        WordHelpPrinter.printHelp();
     }
 
     //explorer, sharing her discoveries and inspiring others to pursue their own adventures.

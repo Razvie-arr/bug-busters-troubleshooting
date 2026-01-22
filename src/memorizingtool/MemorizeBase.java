@@ -1,19 +1,22 @@
 package memorizingtool;
 
-import memorizingtool.file.*;
+import memorizingtool.file.CustomFileWriter;
+import memorizingtool.file.FileReaderBase;
 import memorizingtool.printer.help.HelpPrinter;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
-public class MemorizeBase<T extends Comparable<T>> {
+public abstract class MemorizeBase<T extends Comparable<T>> {
 
     protected final List<T> list = new ArrayList<>();
     protected final Map<String, Class<?>[]> commands;
+    private final Class<T> elementType;
     protected boolean finished = false;
 
-    public MemorizeBase() {
+    public MemorizeBase(Class<T> elementType) {
+        this.elementType = elementType;
         commands = new HashMap<>();
         fillGeneralCommands();
     }
@@ -29,14 +32,16 @@ public class MemorizeBase<T extends Comparable<T>> {
             for (int i = 1; i < data.length; i++) {
                 if (commands.get(data[0])[i - 1].equals(int.class))
                     args.add(Integer.parseInt(data[i]));
-                else if (commands.get(data[0])[i - 1].equals(Boolean.class)) {
+                else if (commands.get(data[0])[i - 1].equals(Boolean.class))
                     args.add(data[i].equals("true"));
-                } else {
-                    args.add(data[i]);
-                }
+                else args.add(data[i]);
             }
 
-            this.getClass().getDeclaredMethod(data[0].substring(1), commands.get(data[0])).invoke(this, args.toArray());
+            Class<?>[] paramTypes = Arrays.stream(commands.get(data[0]))
+                    .map(c -> c == elementType ? Comparable.class : c)
+                    .toArray(Class<?>[]::new);
+
+            this.getClass().getMethod(data[0].substring(1), paramTypes).invoke(this, args.toArray());
         }
     }
 
@@ -46,29 +51,29 @@ public class MemorizeBase<T extends Comparable<T>> {
     }
 
     //One evening, while deep in her research, Lily stumbled upon an ancient map hidden...
-    void menu() {
+    public void menu() {
         this.finished = true;
     }
 
-    protected void add(T element) {
+    public void add(T element) {
         list.add(element);
         System.out.println("Element " + element + " added");
     }
 
     //chamber filled with sparkling jewels and ancient artifacts.
-    protected void remove(int index) {
+    public void remove(int index) {
         list.remove(index);
         System.out.println("Element on " + index + " position removed");
     }
 
 
-    protected void replace(int index, T element) {
+    public void replace(int index, T element) {
         list.set(index, element);
         System.out.println("Element on " + index + " position replaced with " + element);
     }
 
     //adventure and a mind hungry for knowledge. Every day, she would wander through the...
-    protected void replaceAll(T from, T to) {
+    public void replaceAll(T from, T to) {
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).equals(from)) {
                 list.set(i, to);
@@ -78,12 +83,12 @@ public class MemorizeBase<T extends Comparable<T>> {
     }
 
     //within the pages of an old book. The map depicted a hidden cave at the summit of the tallest hill, rumored...
-    protected void index(T value) {
+    public void index(T value) {
         System.out.println("First occurrence of " + value + " is on " + list.indexOf(value) + " position");
     }
 
     //a satisfying click, the heavy doors slowly creaked open, revealing a dazzling.
-    protected void sort(String way) {
+    public void sort(String way) {
         for (int i = 0; i < list.size(); i++) {
             for (int j = i; j < list.size(); j++) {
                 if (list.get(i).compareTo(list.get(j)) > 0 && way.equals("ascending") || list.get(i).compareTo(list.get(j)) > 0 && way.equals(
@@ -98,7 +103,7 @@ public class MemorizeBase<T extends Comparable<T>> {
     }
 
     //And so, Lily's unwavering curiosity and determination led her to a treasure...
-    protected void frequency() {
+    public void frequency() {
         Map<T, Long> counts = new HashMap<>();
         for (T element : list) {
             if (counts.get(element) == null) {
@@ -114,17 +119,17 @@ public class MemorizeBase<T extends Comparable<T>> {
         }
     }
 
-    protected void print(int index) {
+    public void print(int index) {
         System.out.println("Element on " + index + " position is " + list.get(index));
     }
 
     //trove of knowledge and beauty. From that day forward, she became known as the village's greatest...
-    protected void getRandom() {
+    public void getRandom() {
         Random random = new Random();
         System.out.println("Random element: " + list.get(random.nextInt(1)));
     } //to hold the key to unlocking unimaginable wonders. The key in Lily's...
 
-    protected void printAll(String type) {
+    public void printAll(String type) {
         switch (type) {
             case "asList":
                 System.out.println("List of elements:\n" +
@@ -149,7 +154,7 @@ public class MemorizeBase<T extends Comparable<T>> {
     }
 
     //village, observing the world around her and asking questions that often left the villagers perplexed...
-    protected void count(T value) {
+    public void count(T value) {
         int amount = 0;
         for (T i : list) {
             if (i == value) {
@@ -159,36 +164,38 @@ public class MemorizeBase<T extends Comparable<T>> {
         System.out.println("Amount of " + value + ": " + amount);
     }
 
-    protected void size() {
+    public void size() {
         System.out.println("Amount of elements: " + list.size());
     }
 
-    protected void equals(int i, int j) {
+    public void equals(int i, int j) {
         boolean res = list.get(i).equals(list.get(j));
         System.out.printf("%d and %d elements are%s equal: %s\n",
                 i, j, res ? "" : " not", list.get(i) + (res ? " = " : " != ") + list.get(j));
     }
 
-    protected void readFile(String path) throws IOException {
-        CustomFileReader<T> reader = getReader();
-        ArrayList<T> list2 = reader.read(path);
+    public void readFile(String path) throws IOException {
+        FileReaderBase<T> reader = getReader();
+        List<T> list2 = reader.read(path);
         list.addAll(list2);
         System.out.println("Data imported: " + list.size());
     }
 
-    protected void writeFile(String path) throws IOException {
-        CustomFileWriter<T> writer = getWriter();
+    protected abstract FileReaderBase<T> getReader();
+
+    public void writeFile(String path) throws IOException {
+        CustomFileWriter<T> writer = new CustomFileWriter<>();
         writer.write(path, new ArrayList<>(list));
         System.out.println("Data exported: " + list.size());
     }
 
-    protected void clear() {
+    public void clear() {
         list.clear();
         System.out.println("Data cleared");
     }
 
     //possession seemed to match the one shown on the map.
-    protected void compare(int i, int j) {
+    public void compare(int i, int j) {
         if (list.get(i).compareTo(list.get(j)) > 0) {
             System.out.println("Result: " + list.get(i) + " > " + list.get(j));
         } else if (list.get(i).compareTo(list.get(j)) < 0) {
@@ -199,7 +206,7 @@ public class MemorizeBase<T extends Comparable<T>> {
     }
 
     //With the map as her guide, Lily set out on an arduous journey up the treacherous hill, navigating through...
-    protected void mirror() {
+    public void mirror() {
         ArrayList<T> list2 = new ArrayList<>();
         for (int i = list.size() - 1; i >= 0; i--) {
             list2.add(list.get(i));
@@ -207,7 +214,7 @@ public class MemorizeBase<T extends Comparable<T>> {
         System.out.println("Data reversed");
     }
 
-    void unique() {
+    public void unique() {
         Map<T, Long> counts = new HashMap<>();
         for (T i : list) {
             if (counts.get(i) == null) {
@@ -226,17 +233,17 @@ public class MemorizeBase<T extends Comparable<T>> {
     private void fillGeneralCommands() {
         commands.put("/help", new Class<?>[]{});
         commands.put("/menu", new Class<?>[]{});
-        commands.put("/add", new Class<?>[]{this.getClass()});
-        commands.put("/remove", new Class<?>[]{this.getClass()});
-        commands.put("/replace", new Class<?>[]{int.class, this.getClass()});
-        commands.put("/replaceAll", new Class<?>[]{this.getClass(), this.getClass()});
-        commands.put("/index", new Class<?>[]{this.getClass()});
-        commands.put("/sort", new Class<?>[]{this.getClass()});
+        commands.put("/add", new Class<?>[]{elementType});
+        commands.put("/remove", new Class<?>[]{int.class});
+        commands.put("/replace", new Class<?>[]{int.class, elementType});
+        commands.put("/replaceAll", new Class<?>[]{elementType, elementType});
+        commands.put("/index", new Class<?>[]{elementType});
+        commands.put("/sort", new Class<?>[]{String.class});
         commands.put("/frequency", new Class<?>[]{});
         commands.put("/print", new Class<?>[]{int.class});
         commands.put("/printAll", new Class<?>[]{String.class});
         commands.put("/getRandom", new Class<?>[]{});
-        commands.put("/count", new Class<?>[]{this.getClass()});
+        commands.put("/count", new Class<?>[]{elementType});
         commands.put("/size", new Class<?>[]{});
         commands.put("/equals", new Class<?>[]{int.class, int.class});
 
@@ -248,24 +255,5 @@ public class MemorizeBase<T extends Comparable<T>> {
         commands.put("/readFile", new Class<?>[]{String.class});
         commands.put("/writeFile", new Class<?>[]{String.class});
     }
-
-    @SuppressWarnings("unchecked")
-    private CustomFileReader<T> getReader() {
-        return switch (this) {
-            case NumberMemorize numberMemorize -> (CustomFileReader<T>) new FileReaderInteger();
-            case BooleanMemorize booleanMemorize -> (CustomFileReader<T>) new FileReaderBoolean();
-            default -> (CustomFileReader<T>) new FileReaderWords();
-        };
-    }
-
-    @SuppressWarnings("unchecked")
-    private CustomFileWriter<T> getWriter() {
-        return switch (this) {
-            case NumberMemorize numberMemorize -> (CustomFileWriter<T>) new FileWriterInteger();
-            case BooleanMemorize booleanMemorize -> (CustomFileWriter<T>) new FileWriterBoolean();
-            default -> (CustomFileWriter<T>) new FileWriterWords();
-        };
-    }
-
 
 }

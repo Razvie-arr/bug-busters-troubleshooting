@@ -1,10 +1,20 @@
 package memorizingtool.file;
 
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.PrintWriter;
+import java.util.List;
 
-public interface CustomFileWriter<T> {
+public class CustomFileWriter<T> {
 
-    void write(String fileName, ArrayList<T> data) throws IOException;
+    public void write(String fileName, List<T> data) throws IOException {
+        try (FileWriter customFileWriter = new FileWriter(fileName)) {
+            PrintWriter printWriter = new PrintWriter(customFileWriter);
+            for (T item : data) {
+                printWriter.println(item);
+            }
+            printWriter.close();
+        }
+    }
 
 }

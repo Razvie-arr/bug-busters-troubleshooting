@@ -6,7 +6,7 @@ public final class NumberHelpPrinter {
         // Prevent instantiation
     }
 
-    public static void printNumberHelp() {
+    public static void printHelp() {
         System.out.println(
                 "===================================================================================================================\n" +
                         "Number-specific commands:\n" +

@@ -6,6 +6,11 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -223,6 +228,42 @@ public class NumberMemorizeTests {
         numberMemorize.sumAll();
 
         assertEquals("Sum of all elements: 4294967294\n", outContent.toString());
+    }
+
+    @Test
+    public void testReadFile() throws Exception {
+        numberMemorize.add(1);
+        numberMemorize.add(2);
+        Path tempFile = Files.createTempFile("number-memorize-read", ".txt");
+        try {
+            Files.write(tempFile, Arrays.asList("1", "2", "3"), StandardCharsets.UTF_8);
+            outContent.reset();
+
+            numberMemorize.readFile(tempFile.toString());
+
+            assertEquals(Arrays.asList(1, 2, 3), numberMemorize.list);
+            assertEquals("Data imported: 3\n", outContent.toString());
+        } finally {
+            Files.deleteIfExists(tempFile);
+        }
+    }
+
+    @Test
+    public void testWriteFile() throws Exception {
+        numberMemorize.add(4);
+        numberMemorize.add(5);
+        Path tempFile = Files.createTempFile("number-memorize-write", ".txt");
+        try {
+            outContent.reset();
+
+            numberMemorize.writeFile(tempFile.toString());
+
+            List<String> lines = Files.readAllLines(tempFile, StandardCharsets.UTF_8);
+            assertEquals(Arrays.asList("4", "5"), lines);
+            assertEquals("Data exported: 2\n", outContent.toString());
+        } finally {
+            Files.deleteIfExists(tempFile);
+        }
     }
 
 }

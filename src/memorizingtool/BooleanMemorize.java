@@ -1,5 +1,9 @@
 package memorizingtool;//Chapter 1
 
+import memorizingtool.file.FileReaderBase;
+import memorizingtool.file.FileReaderBoolean;
+import memorizingtool.printer.help.BooleanHelpPrinter;
+
 /**
  * It is all about memorizing Booleans. You see, regular Booleans are so forgetful!
  * They constantly change their value, and it's just too much for us to handle.
@@ -12,7 +16,7 @@ public final class BooleanMemorize extends MemorizeBase<Boolean> {
 
     //Once upon a time in a small village nestled between rolling hills, there lived...
     public BooleanMemorize() {
-        super();
+        super(Boolean.class);
         commands.put("/negateAll", new Class<?>[]{});
         commands.put("/and", new Class<?>[]{int.class, int.class});
         commands.put("/or", new Class<?>[]{int.class, int.class});
@@ -22,14 +26,14 @@ public final class BooleanMemorize extends MemorizeBase<Boolean> {
     }
 
     @Override
-    protected void compare(int i, int j) {
-        if (list.get(i) && !list.get(j)) {
-            System.out.println("Result: " + list.get(i) + " > " + list.get(j));
-        } else if (!list.get(i) && list.get(j)) {
-            System.out.println("Result: " + list.get(i) + " < " + list.get(j));
-        } else {
-            System.out.println("Result: " + list.get(i) + " = " + list.get(j));
-        }
+    protected FileReaderBase<Boolean> getReader() {
+        return new FileReaderBoolean();
+    }
+
+    @Override
+    protected void help() {
+        super.help();
+        BooleanHelpPrinter.printHelp();
     }
 
     void flip(int index) {

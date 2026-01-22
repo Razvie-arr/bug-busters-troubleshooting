@@ -1,5 +1,6 @@
 package memorizingtool;
 
+import memorizingtool.file.FileReaderBase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -273,7 +274,12 @@ public class MemorizeBaseTest {
     static final class TestMemorizeImpl extends MemorizeBase<String> {
 
         public TestMemorizeImpl() {
-            super();
+            super(String.class);
+        }
+
+        @Override
+        protected FileReaderBase<String> getReader() {
+            throw new UnsupportedOperationException("Not implemented for testing.");
         }
 
     }
