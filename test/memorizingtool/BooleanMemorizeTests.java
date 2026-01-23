@@ -28,7 +28,6 @@ public class BooleanMemorizeTests {
         booleanMemorize = new BooleanMemorize();
         outContent = new ByteArrayOutputStream();
         originalOut = System.out;
-        System.setOut(new PrintStream(outContent));
     }
 
     @After
@@ -40,7 +39,7 @@ public class BooleanMemorizeTests {
     public void testFlip() {
         booleanMemorize.add(false);
         booleanMemorize.add(true);
-        outContent.reset();
+        setOutContent();
 
         booleanMemorize.flip(1);
 
@@ -52,7 +51,7 @@ public class BooleanMemorizeTests {
     public void testNegateAll() {
         booleanMemorize.add(true);
         booleanMemorize.add(false);
-        outContent.reset();
+        setOutContent();
 
         booleanMemorize.negateAll();
 
@@ -65,7 +64,7 @@ public class BooleanMemorizeTests {
     public void testAnd() {
         booleanMemorize.add(true);
         booleanMemorize.add(false);
-        outContent.reset();
+        setOutContent();
 
         booleanMemorize.and(0, 1);
 
@@ -76,7 +75,7 @@ public class BooleanMemorizeTests {
     public void testOr() {
         booleanMemorize.add(true);
         booleanMemorize.add(false);
-        outContent.reset();
+        setOutContent();
 
         booleanMemorize.or(0, 1);
 
@@ -89,7 +88,7 @@ public class BooleanMemorizeTests {
         for (int i = 0; i < 7; i++) {
             booleanMemorize.add(false);
         }
-        outContent.reset();
+        setOutContent();
 
         // expected result after rotating right by 1
         List<Boolean> expected = new ArrayList<>(booleanMemorize.list);
@@ -106,7 +105,7 @@ public class BooleanMemorizeTests {
         booleanMemorize.add(true);
         booleanMemorize.add(true);
         booleanMemorize.add(true);
-        outContent.reset();
+        setOutContent();
 
         booleanMemorize.convertTo("number");
 
@@ -119,7 +118,7 @@ public class BooleanMemorizeTests {
             booleanMemorize.add(false);
         }
         booleanMemorize.add(true);
-        outContent.reset();
+        setOutContent();
 
         booleanMemorize.convertTo("string");
 
@@ -133,7 +132,7 @@ public class BooleanMemorizeTests {
         booleanMemorize.add(true);
         booleanMemorize.add(false);
         booleanMemorize.add(true);
-        outContent.reset();
+        setOutContent();
 
         booleanMemorize.morse();
 
@@ -147,7 +146,7 @@ public class BooleanMemorizeTests {
         Path tempFile = Files.createTempFile("boolean-memorize-read", ".txt");
         try {
             Files.write(tempFile, Arrays.asList("true", "false", "true"), StandardCharsets.UTF_8);
-            outContent.reset();
+            setOutContent();
 
             booleanMemorize.readFile(tempFile.toString());
 
@@ -158,13 +157,17 @@ public class BooleanMemorizeTests {
         }
     }
 
+    private void setOutContent() {
+        System.setOut(new PrintStream(outContent));
+    }
+
     @Test
     public void testWriteFile() throws Exception {
         booleanMemorize.add(true);
         booleanMemorize.add(false);
         Path tempFile = Files.createTempFile("boolean-memorize-write", ".txt");
         try {
-            outContent.reset();
+            setOutContent();
 
             booleanMemorize.writeFile(tempFile.toString());
 

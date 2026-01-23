@@ -23,7 +23,6 @@ public class MemorizeBaseTest {
         memorize = new TestMemorizeImpl();
         outContent = new ByteArrayOutputStream();
         originalOut = System.out;
-        System.setOut(new PrintStream(outContent));
     }
 
     @After
@@ -33,7 +32,7 @@ public class MemorizeBaseTest {
 
     @Test
     public void testAdd() {
-        outContent.reset();
+        setOutContent();
         memorize.add("apple");
 
         assertEquals(1, memorize.list.size());
@@ -45,7 +44,7 @@ public class MemorizeBaseTest {
     public void testRemove() {
         memorize.add("apple");
         memorize.add("banana");
-        outContent.reset();
+        setOutContent();
 
         memorize.remove(0);
 
@@ -57,7 +56,7 @@ public class MemorizeBaseTest {
     @Test
     public void testReplace() {
         memorize.add("apple");
-        outContent.reset();
+        setOutContent();
 
         memorize.replace(0, "cherry");
 
@@ -70,7 +69,7 @@ public class MemorizeBaseTest {
         memorize.add("apple");
         memorize.add("banana");
         memorize.add("apple");
-        outContent.reset();
+        setOutContent();
 
         memorize.replaceAll("apple", "date");
 
@@ -85,7 +84,7 @@ public class MemorizeBaseTest {
     public void testIndex() {
         memorize.add("apple");
         memorize.add("banana");
-        outContent.reset();
+        setOutContent();
 
         memorize.index("apple");
 
@@ -97,11 +96,11 @@ public class MemorizeBaseTest {
         memorize.add("apple");
         memorize.add("banana");
         memorize.add("apple");
-        outContent.reset();
+        setOutContent();
 
         memorize.frequency();
-        String output = outContent.toString();
 
+        String output = outContent.toString();
         assertTrue(output.contains("Frequency:"));
         assertTrue(output.contains("apple: 2"));
         assertTrue(output.contains("banana: 1"));
@@ -111,7 +110,7 @@ public class MemorizeBaseTest {
     public void testPrint() {
         memorize.add("apple");
         memorize.add("banana");
-        outContent.reset();
+        setOutContent();
 
         memorize.print(1);
 
@@ -125,6 +124,7 @@ public class MemorizeBaseTest {
         memorize.add("cherry");
         memorize.add("date");
         memorize.add("elderberry");
+        setOutContent();
 
         boolean foundDifferent = false;
         String firstResult = null;
@@ -151,7 +151,7 @@ public class MemorizeBaseTest {
     public void testPrintAll() {
         memorize.add("apple");
         memorize.add("banana");
-        outContent.reset();
+        setOutContent();
 
         memorize.printAll("oneLine");
 
@@ -166,7 +166,7 @@ public class MemorizeBaseTest {
         memorize.add("apple");
         memorize.add("apple");
         memorize.add("banana");
-        outContent.reset();
+        setOutContent();
 
         // to force equals method usage, to avoid getting it from string pool
         memorize.count(new String("apple"));
@@ -178,7 +178,7 @@ public class MemorizeBaseTest {
     public void testSize() {
         memorize.add("apple");
         memorize.add("banana");
-        outContent.reset();
+        setOutContent();
 
         memorize.size();
 
@@ -189,7 +189,7 @@ public class MemorizeBaseTest {
     public void testEquals() {
         memorize.add("apple");
         memorize.add("apple");
-        outContent.reset();
+        setOutContent();
 
         memorize.equals(0, 1);
 
@@ -201,7 +201,7 @@ public class MemorizeBaseTest {
     public void testClear() {
         memorize.add("apple");
         memorize.add("banana");
-        outContent.reset();
+        setOutContent();
 
         memorize.clear();
 
@@ -214,7 +214,7 @@ public class MemorizeBaseTest {
         memorize.add("apple");
         memorize.add("banana");
         memorize.add("cherry");
-        outContent.reset();
+        setOutContent();
 
         memorize.mirror();
 
@@ -229,7 +229,7 @@ public class MemorizeBaseTest {
         memorize.add("apple");
         memorize.add("banana");
         memorize.add("apple");
-        outContent.reset();
+        setOutContent();
 
         memorize.unique();
 
@@ -244,7 +244,7 @@ public class MemorizeBaseTest {
         memorize.add("cherry");
         memorize.add("apple");
         memorize.add("banana");
-        outContent.reset();
+        setOutContent();
 
         memorize.sort("ascending");
 
@@ -259,7 +259,7 @@ public class MemorizeBaseTest {
         memorize.add("cherry");
         memorize.add("apple");
         memorize.add("banana");
-        outContent.reset();
+        setOutContent();
 
         memorize.sort("descending");
 
@@ -267,6 +267,17 @@ public class MemorizeBaseTest {
         assertEquals("banana", memorize.list.get(1));
         assertEquals("apple", memorize.list.get(2));
         assertTrue(outContent.toString().contains("descending"));
+    }
+
+    @Test
+    public void testInvalidIndex() {
+        memorize.add("apple"); //index 0
+        memorize.add("banana"); //index 1
+        outContent.reset();
+    }
+
+    private void setOutContent() {
+        System.setOut(new PrintStream(outContent));
     }
 
     /**

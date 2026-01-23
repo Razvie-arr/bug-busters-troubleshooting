@@ -26,7 +26,6 @@ public class WordsMemorizeTests {
         memorize = new WordMemorize();
         outContent = new ByteArrayOutputStream();
         originalOut = System.out;
-        System.setOut(new PrintStream(outContent));
     }
 
     @After
@@ -38,7 +37,7 @@ public class WordsMemorizeTests {
     public void testConcatTwoStrings() {
         memorize.add("Hello");
         memorize.add("World");
-        outContent.reset();
+        setOutContent();
 
         memorize.concat(0, 1);
 
@@ -48,7 +47,7 @@ public class WordsMemorizeTests {
     @Test
     public void testSwapCaseUpperToLower() {
         memorize.add("HeLLo");
-        outContent.reset();
+        setOutContent();
 
         memorize.swapCase(0);
 
@@ -58,7 +57,7 @@ public class WordsMemorizeTests {
     @Test
     public void testUppercase() {
         memorize.add("hello");
-        outContent.reset();
+        setOutContent();
 
         memorize.upper(0);
 
@@ -68,7 +67,7 @@ public class WordsMemorizeTests {
     @Test
     public void testLowercase() {
         memorize.add("HELLO");
-        outContent.reset();
+        setOutContent();
 
         memorize.lower(0);
 
@@ -78,7 +77,7 @@ public class WordsMemorizeTests {
     @Test
     public void testReverseString() {
         memorize.add("hello");
-        outContent.reset();
+        setOutContent();
 
         memorize.reverse(0);
 
@@ -88,7 +87,7 @@ public class WordsMemorizeTests {
     @Test
     public void testLength() {
         memorize.add("hello");
-        outContent.reset();
+        setOutContent();
 
         memorize.length(0);
 
@@ -100,7 +99,7 @@ public class WordsMemorizeTests {
         memorize.add("apple");
         memorize.add("banana");
         memorize.add("cherry");
-        outContent.reset();
+        setOutContent();
 
         memorize.join(",");
 
@@ -113,7 +112,7 @@ public class WordsMemorizeTests {
         memorize.add("apple");
         memorize.add("apricot");
         memorize.add("banana");
-        outContent.reset();
+        setOutContent();
 
         memorize.regex("a.*");
 
@@ -130,7 +129,7 @@ public class WordsMemorizeTests {
         Path tempFile = Files.createTempFile("word-memorize-read", ".txt");
         try {
             Files.write(tempFile, Arrays.asList("apple", "banana", "cherry"), StandardCharsets.UTF_8);
-            outContent.reset();
+            setOutContent();
 
             memorize.readFile(tempFile.toString());
 
@@ -147,7 +146,7 @@ public class WordsMemorizeTests {
         memorize.add("bar");
         Path tempFile = Files.createTempFile("word-memorize-write", ".txt");
         try {
-            outContent.reset();
+            setOutContent();
 
             memorize.writeFile(tempFile.toString());
 
@@ -157,6 +156,10 @@ public class WordsMemorizeTests {
         } finally {
             Files.deleteIfExists(tempFile);
         }
+    }
+
+    private void setOutContent() {
+        System.setOut(new PrintStream(outContent));
     }
 
 }

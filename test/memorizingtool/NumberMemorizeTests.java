@@ -25,7 +25,6 @@ public class NumberMemorizeTests {
         numberMemorize = new NumberMemorize();
         outContent = new ByteArrayOutputStream();
         originalOut = System.out;
-        System.setOut(new PrintStream(outContent));
     }
 
     @After
@@ -37,7 +36,7 @@ public class NumberMemorizeTests {
     public void testSum() {
         numberMemorize.add(7);
         numberMemorize.add(3);
-        outContent.reset();
+        setOutContent();
 
         numberMemorize.sum(0, 1);
 
@@ -48,7 +47,7 @@ public class NumberMemorizeTests {
     public void testSubtract() {
         numberMemorize.add(10);
         numberMemorize.add(4);
-        outContent.reset();
+        setOutContent();
 
         numberMemorize.subtract(0, 1);
 
@@ -59,7 +58,7 @@ public class NumberMemorizeTests {
     public void testMultiply() {
         numberMemorize.add(6);
         numberMemorize.add(7);
-        outContent.reset();
+        setOutContent();
 
         numberMemorize.multiply(0, 1);
 
@@ -70,7 +69,7 @@ public class NumberMemorizeTests {
     public void testDivide() {
         numberMemorize.add(20);
         numberMemorize.add(4);
-        outContent.reset();
+        setOutContent();
 
         numberMemorize.divide(0, 1);
 
@@ -81,7 +80,7 @@ public class NumberMemorizeTests {
     public void testPow() {
         numberMemorize.add(2);
         numberMemorize.add(8);
-        outContent.reset();
+        setOutContent();
 
         numberMemorize.pow(0, 1);
 
@@ -91,7 +90,7 @@ public class NumberMemorizeTests {
     @Test
     public void testFactorial() {
         numberMemorize.add(5);
-        outContent.reset();
+        setOutContent();
 
         numberMemorize.factorial(0);
 
@@ -101,7 +100,7 @@ public class NumberMemorizeTests {
     @Test
     public void testFactorialZero() {
         numberMemorize.add(0);
-        outContent.reset();
+        setOutContent();
 
         numberMemorize.factorial(0);
 
@@ -111,7 +110,7 @@ public class NumberMemorizeTests {
     @Test
     public void testFactorialOne() {
         numberMemorize.add(1);
-        outContent.reset();
+        setOutContent();
 
         numberMemorize.factorial(0);
 
@@ -123,7 +122,7 @@ public class NumberMemorizeTests {
         numberMemorize.add(5);
         numberMemorize.add(10);
         numberMemorize.add(15);
-        outContent.reset();
+        setOutContent();
 
         numberMemorize.sumAll();
 
@@ -135,7 +134,7 @@ public class NumberMemorizeTests {
         numberMemorize.add(10);
         numberMemorize.add(20);
         numberMemorize.add(30);
-        outContent.reset();
+        setOutContent();
 
         numberMemorize.average();
 
@@ -146,7 +145,7 @@ public class NumberMemorizeTests {
     public void testAverageFractional() {
         numberMemorize.add(5);
         numberMemorize.add(6);
-        outContent.reset();
+        setOutContent();
 
         numberMemorize.average();
 
@@ -157,7 +156,7 @@ public class NumberMemorizeTests {
     public void testSumOverflow() {
         numberMemorize.add(Integer.MAX_VALUE);
         numberMemorize.add(1);
-        outContent.reset();
+        setOutContent();
 
         numberMemorize.sum(0, 1);
 
@@ -168,7 +167,7 @@ public class NumberMemorizeTests {
     public void testSubtractUnderflow() {
         numberMemorize.add(Integer.MIN_VALUE);
         numberMemorize.add(1);
-        outContent.reset();
+        setOutContent();
 
         numberMemorize.subtract(0, 1);
 
@@ -179,7 +178,7 @@ public class NumberMemorizeTests {
     public void testMultiplyOverflow() {
         numberMemorize.add(100000);
         numberMemorize.add(100000);
-        outContent.reset();
+        setOutContent();
 
         numberMemorize.multiply(0, 1);
 
@@ -190,7 +189,7 @@ public class NumberMemorizeTests {
     public void testDivideFractionalResult() {
         numberMemorize.add(10);
         numberMemorize.add(3);
-        outContent.reset();
+        setOutContent();
 
         numberMemorize.divide(0, 1);
 
@@ -201,7 +200,7 @@ public class NumberMemorizeTests {
     public void testPowOverflow() {
         numberMemorize.add(1000);
         numberMemorize.add(10);
-        outContent.reset();
+        setOutContent();
 
         numberMemorize.pow(0, 1);
 
@@ -212,7 +211,7 @@ public class NumberMemorizeTests {
     public void testPowFractionalBase() {
         numberMemorize.add(2);
         numberMemorize.add(-2);
-        outContent.reset();
+        setOutContent();
 
         numberMemorize.pow(0, 1);
 
@@ -223,7 +222,7 @@ public class NumberMemorizeTests {
     public void testSumAllOverflow() {
         numberMemorize.add(Integer.MAX_VALUE);
         numberMemorize.add(Integer.MAX_VALUE);
-        outContent.reset();
+        setOutContent();
 
         numberMemorize.sumAll();
 
@@ -237,7 +236,7 @@ public class NumberMemorizeTests {
         Path tempFile = Files.createTempFile("number-memorize-read", ".txt");
         try {
             Files.write(tempFile, Arrays.asList("1", "2", "3"), StandardCharsets.UTF_8);
-            outContent.reset();
+            setOutContent();
 
             numberMemorize.readFile(tempFile.toString());
 
@@ -254,7 +253,7 @@ public class NumberMemorizeTests {
         numberMemorize.add(5);
         Path tempFile = Files.createTempFile("number-memorize-write", ".txt");
         try {
-            outContent.reset();
+            setOutContent();
 
             numberMemorize.writeFile(tempFile.toString());
 
@@ -264,6 +263,10 @@ public class NumberMemorizeTests {
         } finally {
             Files.deleteIfExists(tempFile);
         }
+    }
+
+    private void setOutContent() {
+        System.setOut(new PrintStream(outContent));
     }
 
 }
