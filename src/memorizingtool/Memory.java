@@ -36,6 +36,8 @@ class Memory {
                     break;
                 case "0":
                     return;
+                default:
+                    System.out.println("Incorrect command");
             }
         }
     }

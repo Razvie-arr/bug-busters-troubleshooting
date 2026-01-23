@@ -4,7 +4,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -22,17 +24,20 @@ public class BooleanMemorizeTests {
     private BooleanMemorize booleanMemorize;
     private ByteArrayOutputStream outContent;
     private PrintStream originalOut;
+    private InputStream originalIn;
 
     @Before
     public void setUp() {
         booleanMemorize = new BooleanMemorize();
         outContent = new ByteArrayOutputStream();
         originalOut = System.out;
+        originalIn = System.in;
     }
 
     @After
     public void tearDown() {
         System.setOut(originalOut);
+        System.setIn(originalIn);
     }
 
     @Test
@@ -157,10 +162,6 @@ public class BooleanMemorizeTests {
         }
     }
 
-    private void setOutContent() {
-        System.setOut(new PrintStream(outContent));
-    }
-
     @Test
     public void testWriteFile() throws Exception {
         booleanMemorize.add(true);
@@ -177,6 +178,50 @@ public class BooleanMemorizeTests {
         } finally {
             Files.deleteIfExists(tempFile);
         }
+    }
+
+    @Test
+    public void testConvertToEmptyList() {
+        setOutContent();
+
+        booleanMemorize.convertTo("number");
+
+        assertEquals("No data memorized", outContent.toString());
+    }
+
+    @Test
+    public void testConvertToInvalidType() {
+        booleanMemorize.add(true);
+        setOutContent();
+
+        booleanMemorize.convertTo("invalid");
+
+        assertEquals("Incorrect argument, possible arguments: string, number", outContent.toString());
+    }
+
+    @Test
+    public void testMorseEmptyList() {
+        setOutContent();
+
+        booleanMemorize.morse();
+
+        assertEquals("No data memorized", outContent.toString());
+    }
+
+    @Test
+    public void testRunWithInvalidBooleanInput() throws Exception {
+        String input = "/add 123\n/menu\n"; // menu is called to finish the program
+        System.setIn(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
+        System.setOut(new PrintStream(outContent));
+
+        booleanMemorize.Run();
+
+        assertTrue(outContent.toString().contains("Some arguments can't be parsed"));
+    }
+
+
+    private void setOutContent() {
+        System.setOut(new PrintStream(outContent));
     }
 
 }

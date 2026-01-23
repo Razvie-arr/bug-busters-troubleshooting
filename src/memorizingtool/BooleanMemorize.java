@@ -46,6 +46,9 @@ public final class BooleanMemorize extends MemorizeBase<Boolean> {
 
     @Override
     protected Boolean parseElement(String value) {
+//        if (!"true".equalsIgnoreCase(value) && !"false".equalsIgnoreCase(value)) {
+//            throw new CannotBeParsedException();
+//        }
         return Boolean.valueOf(value);
     }
 

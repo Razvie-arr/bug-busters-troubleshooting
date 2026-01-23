@@ -158,6 +158,27 @@ public class WordsMemorizeTests {
         }
     }
 
+    @Test
+    public void testRegexNoMatches() {
+        memorize.add("dog");
+        memorize.add("cat");
+        setOutContent();
+
+        memorize.regex("z.*");
+
+        assertEquals("There are no strings that match provided regex", outContent.toString());
+    }
+
+    @Test
+    public void testRegexInvalidPattern() {
+        memorize.add("test");
+        setOutContent();
+
+        memorize.regex("[invalid");
+
+        assertEquals("Incorrect regex pattern provided", outContent.toString());
+    }
+
     private void setOutContent() {
         System.setOut(new PrintStream(outContent));
     }

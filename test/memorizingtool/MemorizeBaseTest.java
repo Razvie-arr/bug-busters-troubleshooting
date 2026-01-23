@@ -1,11 +1,13 @@
 package memorizingtool;
 
 import memorizingtool.file.FileReaderBase;
+import memorizingtool.file.FileReaderWords;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Map;
 
@@ -270,10 +272,61 @@ public class MemorizeBaseTest {
     }
 
     @Test
-    public void testInvalidIndex() {
-        memorize.add("apple"); //index 0
-        memorize.add("banana"); //index 1
-        outContent.reset();
+    public void testIndexOfNonExistingElement() {
+        setOutContent();
+
+        memorize.index("nonexistent");
+
+        assertEquals("There is no such element", outContent.toString());
+    }
+
+    @Test
+    public void testSortWithInvalidOrder() {
+        memorize.add("apple");
+        memorize.add("banana");
+        setOutContent();
+
+        memorize.sort("invalidOrder");
+
+        assertEquals("Incorrect argument, possible arguments: ascending, descending", outContent.toString());
+    }
+
+    @Test
+    public void testFrequencyEmptyList() {
+        setOutContent();
+
+        memorize.frequency();
+
+        assertEquals("There are no elements in a list", outContent.toString());
+    }
+
+    @Test
+    public void testGetRandomEmptyList() {
+        setOutContent();
+
+        memorize.getRandom();
+
+        assertEquals("There are no elements memorized", outContent.toString());
+    }
+
+    @Test
+    public void testReadNonExistingFile() throws IOException {
+        setOutContent();
+
+        memorize.readFile("non_existing_file.txt");
+
+        assertEquals("File not found!", outContent.toString());
+    }
+
+    @Test
+    public void testPrintAllWithInvalidFormat() {
+        memorize.add("apple");
+        memorize.add("banana");
+        setOutContent();
+
+        memorize.printAll("invalidFormat");
+
+        assertEquals("Incorrect argument, possible arguments: asList, lineByLine, oneLine", outContent.toString());
     }
 
     private void setOutContent() {
@@ -302,7 +355,7 @@ public class MemorizeBaseTest {
 
         @Override
         protected FileReaderBase<String> getReader() {
-            throw new UnsupportedOperationException("Not implemented for testing.");
+            return new FileReaderWords();
         }
 
     }

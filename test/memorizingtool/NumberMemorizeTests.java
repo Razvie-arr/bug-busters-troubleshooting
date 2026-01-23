@@ -265,6 +265,27 @@ public class NumberMemorizeTests {
         }
     }
 
+    @Test
+    public void testNegativeFactorial() {
+        numberMemorize.add(-5);
+        setOutContent();
+
+        numberMemorize.factorial(0);
+
+        assertEquals("\"undefined\"", outContent.toString());
+    }
+
+    @Test
+    public void testDivisionByZero() {
+        numberMemorize.add(10);
+        numberMemorize.add(0);
+        setOutContent();
+
+        numberMemorize.divide(0, 1);
+
+        assertEquals("Division by zero", outContent.toString());
+    }
+
     private void setOutContent() {
         System.setOut(new PrintStream(outContent));
     }
