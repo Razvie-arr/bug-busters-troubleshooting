@@ -42,6 +42,7 @@ class Memory {
                 default:
                     System.out.println("Incorrect command");
             }
+            System.gc();
         }
     }
 

@@ -83,6 +83,7 @@ public abstract class MemorizeBase<T extends Comparable<T>> {
     //One evening, while deep in her research, Lily stumbled upon an ancient map hidden...
     public void menu() {
         this.finished = true;
+        System.gc();
     }
 
     public void add(T element) {
