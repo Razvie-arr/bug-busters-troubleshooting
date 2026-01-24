@@ -404,7 +404,7 @@ public class MemorizeBaseTests {
         }
 
         @Override
-        protected void registerTypeCommands(Map<String, Command> registry) {
+        protected void registerTypeCommands(Map<String, CommandWrapper> registry) {
             // No type-specific commands for testing
         }
 

@@ -35,14 +35,14 @@ public final class BooleanMemorize extends MemorizeBase<Boolean> {
     }
 
     @Override
-    protected void registerTypeCommands(Map<String, Command> registry) {
-        registry.put("/flip", parts -> flip(Integer.parseInt(parts[1])));
-        registry.put("/negateAll", parts -> negateAll());
-        registry.put("/and", parts -> and(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
-        registry.put("/or", parts -> or(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
-        registry.put("/logShift", parts -> logShift(Integer.parseInt(parts[1])));
-        registry.put("/convertTo", parts -> convertTo(parts[1]));
-        registry.put("/morse", parts -> morse());
+    protected void registerTypeCommands(Map<String, CommandWrapper> registry) {
+        registry.put("/flip", new CommandWrapper(parts -> flip(Integer.parseInt(parts[0])), 1));
+        registry.put("/negateAll", new CommandWrapper(parts -> negateAll(), 0));
+        registry.put("/and", new CommandWrapper(parts -> and(Integer.parseInt(parts[0]), Integer.parseInt(parts[1])), 2));
+        registry.put("/or", new CommandWrapper(parts -> or(Integer.parseInt(parts[0]), Integer.parseInt(parts[1])), 2));
+        registry.put("/logShift", new CommandWrapper(parts -> logShift(Integer.parseInt(parts[0])), 1));
+        registry.put("/convertTo", new CommandWrapper(parts -> convertTo(parts[0]), 1));
+        registry.put("/morse", new CommandWrapper(parts -> morse(), 0));
     }
 
     @Override

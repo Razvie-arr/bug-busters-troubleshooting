@@ -42,15 +42,15 @@ public final class WordMemorize extends MemorizeBase<String> {
     }
 
     @Override
-    protected void registerTypeCommands(Map<String, Command> registry) {
-        registry.put("/concat", parts -> concat(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
-        registry.put("/swapCase", parts -> swapCase(Integer.parseInt(parts[1])));
-        registry.put("/upper", parts -> upper(Integer.parseInt(parts[1])));
-        registry.put("/lower", parts -> lower(Integer.parseInt(parts[1])));
-        registry.put("/reverse", parts -> reverse(Integer.parseInt(parts[1])));
-        registry.put("/length", parts -> length(Integer.parseInt(parts[1])));
-        registry.put("/join", parts -> join(parts[1]));
-        registry.put("/regex", parts -> regex(parts[1]));
+    protected void registerTypeCommands(Map<String, CommandWrapper> registry) {
+        registry.put("/concat", new CommandWrapper(parts -> concat(Integer.parseInt(parts[0]), Integer.parseInt(parts[1])), 2));
+        registry.put("/swapCase", new CommandWrapper(parts -> swapCase(Integer.parseInt(parts[0])), 1));
+        registry.put("/upper", new CommandWrapper(parts -> upper(Integer.parseInt(parts[0])), 1));
+        registry.put("/lower", new CommandWrapper(parts -> lower(Integer.parseInt(parts[0])), 1));
+        registry.put("/reverse", new CommandWrapper(parts -> reverse(Integer.parseInt(parts[0])), 1));
+        registry.put("/length", new CommandWrapper(parts -> length(Integer.parseInt(parts[0])), 1));
+        registry.put("/join", new CommandWrapper(parts -> join(parts[0]), 1));
+        registry.put("/regex", new CommandWrapper(parts -> regex(parts[0]), 1));
     }
 
     @Override
@@ -106,7 +106,7 @@ public final class WordMemorize extends MemorizeBase<String> {
                     matchingElements.add(element);
                 }
             }
-            
+
             if (matchingElements.isEmpty()) {
                 System.out.println("There are no strings that match provided regex");
                 return;

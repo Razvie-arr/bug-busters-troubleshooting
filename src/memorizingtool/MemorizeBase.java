@@ -11,7 +11,7 @@ import java.util.*;
 
 public abstract class MemorizeBase<T extends Comparable<T>> {
 
-    private final Map<String, Command> dispatcher = new HashMap<>();
+    private final Map<String, CommandWrapper> dispatcher = new HashMap<>();
     protected List<T> list = new ArrayList<>();
     protected boolean finished = false;
 
@@ -32,43 +32,48 @@ public abstract class MemorizeBase<T extends Comparable<T>> {
 
     private void runCommand(String input) throws Exception {
         String[] data = input.split(" ");
-        Command command = dispatcher.get(data[0]);
-        if (command == null) {
+        CommandWrapper commandWrapper = dispatcher.get(data[0]);
+        if (commandWrapper == null) {
             System.out.println("No such command");
             return;
         }
         try {
-            command.run(data);
+            String[] args = Arrays.copyOfRange(data, 1, data.length); // extract command arguments
+            commandWrapper.run(args);
         } catch (BooleanCannotBeParsedException | NumberFormatException e) {
             System.out.println("Some arguments can't be parsed!");
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Index out of bounds!");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Incorrect amount of arguments");
         }
     }
 
     private void registerBaseCommands() {
-        dispatcher.put("/help", parts -> help());
-        dispatcher.put("/menu", parts -> menu());
-        dispatcher.put("/add", parts -> add(parseElement(parts[1])));
-        dispatcher.put("/remove", parts -> remove(Integer.parseInt(parts[1])));
-        dispatcher.put("/replace", parts -> replace(Integer.parseInt(parts[1]), parseElement(parts[2])));
-        dispatcher.put("/replaceAll", parts -> replaceAll(parseElement(parts[1]), parseElement(parts[2])));
-        dispatcher.put("/index", parts -> index(parseElement(parts[1])));
-        dispatcher.put("/sort", parts -> sort(parts[1]));
-        dispatcher.put("/frequency", parts -> frequency());
-        dispatcher.put("/print", parts -> print(Integer.parseInt(parts[1])));
-        dispatcher.put("/printAll", parts -> printAll(parts[1]));
-        dispatcher.put("/getRandom", parts -> getRandom());
-        dispatcher.put("/count", parts -> count(parseElement(parts[1])));
-        dispatcher.put("/size", parts -> size());
-        dispatcher.put("/equals", parts -> equals(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
-        dispatcher.put("/clear", parts -> clear());
-        dispatcher.put("/compare", parts -> compare(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
-        dispatcher.put("/mirror", parts -> mirror());
-        dispatcher.put("/unique", parts -> unique());
-        dispatcher.put("/readFile", parts -> readFile(parts[1]));
-        dispatcher.put("/writeFile", parts -> writeFile(parts[1]));
+        dispatcher.put("/help", new CommandWrapper(parts -> help(), 0));
+        dispatcher.put("/menu", new CommandWrapper(parts -> menu(), 0));
+        dispatcher.put("/add", new CommandWrapper(parts -> add(parseElement(parts[0])), 1));
+        dispatcher.put("/remove", new CommandWrapper(parts -> remove(Integer.parseInt(parts[0])), 1));
+        dispatcher.put("/replace", new CommandWrapper(parts -> replace(Integer.parseInt(parts[0]), parseElement(parts[1])), 2));
+        dispatcher.put("/replaceAll", new CommandWrapper(parts -> replaceAll(parseElement(parts[0]), parseElement(parts[1])), 2));
+        dispatcher.put("/index", new CommandWrapper(parts -> index(parseElement(parts[0])), 1));
+        dispatcher.put("/sort", new CommandWrapper(parts -> sort(parts[0]), 1));
+        dispatcher.put("/frequency", new CommandWrapper(parts -> frequency(), 0));
+        dispatcher.put("/print", new CommandWrapper(parts -> print(Integer.parseInt(parts[0])), 1));
+        dispatcher.put("/printAll", new CommandWrapper(parts -> printAll(parts[0]), 1));
+        dispatcher.put("/getRandom", new CommandWrapper(parts -> getRandom(), 0));
+        dispatcher.put("/count", new CommandWrapper(parts -> count(parseElement(parts[0])), 1));
+        dispatcher.put("/size", new CommandWrapper(parts -> size(), 0));
+        dispatcher.put("/equals", new CommandWrapper(parts -> equals(Integer.parseInt(parts[0]), Integer.parseInt(parts[1])), 2));
+        dispatcher.put("/clear", new CommandWrapper(parts -> clear(), 0));
+        dispatcher.put("/compare", new CommandWrapper(parts -> compare(Integer.parseInt(parts[0]), Integer.parseInt(parts[1])), 2));
+        dispatcher.put("/mirror", new CommandWrapper(parts -> mirror(), 0));
+        dispatcher.put("/unique", new CommandWrapper(parts -> unique(), 0));
+        dispatcher.put("/readFile", new CommandWrapper(parts -> readFile(parts[0]), 1));
+        dispatcher.put("/writeFile", new CommandWrapper(parts -> writeFile(parts[0]), 1));
     }
 
-    protected abstract void registerTypeCommands(Map<String, Command> registry);
+    protected abstract void registerTypeCommands(Map<String, CommandWrapper> registry);
 
     //for any mention of a hidden treasure or a forgotten secret that might hold the key to her discovery.
     public void help() { //a curious young girl named Lily. Lily had a heart full of...
@@ -298,7 +303,26 @@ public abstract class MemorizeBase<T extends Comparable<T>> {
     @FunctionalInterface
     protected interface Command {
 
-        void run(String[] parts) throws Exception;
+        void run(String... args) throws Exception;
+
+    }
+
+    protected static class CommandWrapper {
+
+        private final Command command;
+        private final int expectedArgumentsCount;
+
+        public CommandWrapper(Command command, int expectedArgumentsCount) {
+            this.command = command;
+            this.expectedArgumentsCount = expectedArgumentsCount;
+        }
+
+        public void run(String... args) throws Exception {
+            if (args.length != expectedArgumentsCount) {
+                throw new IllegalArgumentException();
+            }
+            command.run(args);
+        }
 
     }
 

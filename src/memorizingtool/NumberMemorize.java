@@ -39,15 +39,15 @@ public final class NumberMemorize extends MemorizeBase<Integer> {
     }
 
     @Override
-    protected void registerTypeCommands(Map<String, Command> registry) {
-        registry.put("/sum", parts -> sum(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
-        registry.put("/subtract", parts -> subtract(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
-        registry.put("/multiply", parts -> multiply(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
-        registry.put("/divide", parts -> divide(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
-        registry.put("/pow", parts -> pow(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
-        registry.put("/factorial", parts -> factorial(Integer.parseInt(parts[1])));
-        registry.put("/sumAll", parts -> sumAll());
-        registry.put("/average", parts -> average());
+    protected void registerTypeCommands(Map<String, CommandWrapper> registry) {
+        registry.put("/sum", new CommandWrapper(parts -> sum(Integer.parseInt(parts[0]), Integer.parseInt(parts[1])), 2));
+        registry.put("/subtract", new CommandWrapper(parts -> subtract(Integer.parseInt(parts[0]), Integer.parseInt(parts[1])), 2));
+        registry.put("/multiply", new CommandWrapper(parts -> multiply(Integer.parseInt(parts[0]), Integer.parseInt(parts[1])), 2));
+        registry.put("/divide", new CommandWrapper(parts -> divide(Integer.parseInt(parts[0]), Integer.parseInt(parts[1])), 2));
+        registry.put("/pow", new CommandWrapper(parts -> pow(Integer.parseInt(parts[0]), Integer.parseInt(parts[1])), 2));
+        registry.put("/factorial", new CommandWrapper(parts -> factorial(Integer.parseInt(parts[0])), 1));
+        registry.put("/sumAll", new CommandWrapper(parts -> sumAll(), 0));
+        registry.put("/average", new CommandWrapper(parts -> average(), 0));
     }
 
     @Override
