@@ -233,9 +233,8 @@ public abstract class MemorizeBase<T extends Comparable<T>> {
     public void readFile(String path) {
         try {
             FileReaderBase<T> reader = getReader();
-            List<T> list2 = reader.read(path);
-            list.addAll(list2);
-            System.out.println("Data imported: " + list2.size());
+            int readCount = reader.read(path, list);
+            System.out.println("Data imported: " + readCount);
         } catch (NoSuchFileException e) {
             System.out.println("File not found!");
         } catch (IOException e) {
