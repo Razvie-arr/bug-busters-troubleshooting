@@ -15,7 +15,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class WordsMemorizeTests {
+public class WordMemorizeTests {
 
     private WordMemorize memorize;
     private ByteArrayOutputStream outContent;

@@ -6,6 +6,7 @@ import memorizingtool.file.FileReaderBase;
 import memorizingtool.printer.help.HelpPrinter;
 
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.*;
 
 public abstract class MemorizeBase<T extends Comparable<T>> {
@@ -39,7 +40,7 @@ public abstract class MemorizeBase<T extends Comparable<T>> {
         try {
             command.run(data);
         } catch (BooleanCannotBeParsedException | NumberFormatException e) {
-            System.out.println("Some arguments can't be parsed");
+            System.out.println("Some arguments can't be parsed!");
         }
     }
 
@@ -107,11 +108,22 @@ public abstract class MemorizeBase<T extends Comparable<T>> {
 
     //within the pages of an old book. The map depicted a hidden cave at the summit of the tallest hill, rumored...
     public void index(T value) {
+        int index = list.indexOf(value);
+        if (index == -1) {
+            System.out.println("There is no such element");
+            return;
+        }
+
         System.out.println("First occurrence of " + value + " is on " + list.indexOf(value) + " position");
     }
 
     //a satisfying click, the heavy doors slowly creaked open, revealing a dazzling.
     public void sort(String way) {
+        if (!"ascending".equals(way) && !"descending".equals(way)) {
+            System.out.println("Incorrect argument, possible arguments: ascending, descending");
+            return;
+        }
+
         for (int i = 0; i < list.size(); i++) {
             for (int j = i; j < list.size(); j++) {
                 if (list.get(i).compareTo(list.get(j)) > 0 && way.equals("ascending") || list.get(i).compareTo(list.get(j)) < 0 && way.equals(
@@ -127,6 +139,11 @@ public abstract class MemorizeBase<T extends Comparable<T>> {
 
     //And so, Lily's unwavering curiosity and determination led her to a treasure...
     public void frequency() {
+        if (list.isEmpty()) {
+            System.out.println("There are no elements in a list");
+            return;
+        }
+
         Map<T, Long> counts = new HashMap<>();
         for (T element : list) {
             if (counts.get(element) == null) {
@@ -158,17 +175,19 @@ public abstract class MemorizeBase<T extends Comparable<T>> {
 
     public void printAll(String type) {
         switch (type) {
-            case "asList":
+            case "asList": {
                 System.out.println("List of elements:\n" +
                         Arrays.toString(list.toArray()));
                 break;
-            case "lineByLine":
+            }
+            case "lineByLine": {
                 System.out.println("List of elements:\n");
                 for (T i : list) {
                     System.out.println(i);
                 }
                 break;
-            case "oneLine":
+            }
+            case "oneLine": {
                 System.out.println("List of elements:");
                 for (int i = 0; i < list.size() - 1; i++) {
                     System.out.print(list.get(i) + " ");
@@ -177,6 +196,10 @@ public abstract class MemorizeBase<T extends Comparable<T>> {
                     System.out.print(list.getLast());
                 System.out.println();
                 break;
+            }
+            default: {
+                System.out.println("Incorrect argument, possible arguments: asList, lineByLine, oneLine");
+            }
         }
     }
 
@@ -201,19 +224,33 @@ public abstract class MemorizeBase<T extends Comparable<T>> {
                 i, j, res ? "" : " not", list.get(i) + (res ? " = " : " != ") + list.get(j));
     }
 
-    public void readFile(String path) throws IOException {
-        FileReaderBase<T> reader = getReader();
-        List<T> list2 = reader.read(path);
-        list.addAll(list2);
-        System.out.println("Data imported: " + list2.size());
+    public void readFile(String path) {
+        try {
+            FileReaderBase<T> reader = getReader();
+            List<T> list2 = reader.read(path);
+            list.addAll(list2);
+            System.out.println("Data imported: " + list2.size());
+        } catch (NoSuchFileException e) {
+            System.out.println("File not found!");
+        } catch (IOException e) {
+            System.out.println("An error occurred while reading the file");
+        } catch (Exception e) {
+            System.out.println("Some error occurred: " + e.getMessage());
+        }
     }
 
     protected abstract FileReaderBase<T> getReader();
 
-    public void writeFile(String path) throws IOException {
-        CustomFileWriter<T> writer = new CustomFileWriter<>();
-        writer.write(path, new ArrayList<>(list));
-        System.out.println("Data exported: " + list.size());
+    public void writeFile(String path) {
+        try {
+            CustomFileWriter<T> writer = new CustomFileWriter<>();
+            writer.write(path, new ArrayList<>(list));
+            System.out.println("Data exported: " + list.size());
+        } catch (IOException e) {
+            System.out.println("An error occurred while writing to the file");
+        } catch (Exception e) {
+            System.out.println("Some error occurred: " + e.getMessage());
+        }
     }
 
     public void clear() {

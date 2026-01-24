@@ -6,14 +6,17 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class MemorizeBaseTest {
+public class MemorizeBaseTests {
 
     private TestMemorizeImpl memorize;
     private ByteArrayOutputStream outContent;
@@ -312,7 +315,7 @@ public class MemorizeBaseTest {
     }
 
     @Test
-    public void testReadNonExistingFile() throws IOException {
+    public void testReadNonExistingFile() {
         setOutContent();
 
         memorize.readFile("non_existing_file.txt");
