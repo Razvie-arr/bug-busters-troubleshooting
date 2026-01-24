@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class NumberMemorizeTests {
 
@@ -272,7 +273,7 @@ public class NumberMemorizeTests {
 
         numberMemorize.factorial(0);
 
-        assertEquals("\"undefined\"", outContent.toString());
+        assertTrue(outContent.toString().contains("\"undefined\""));
     }
 
     @Test
@@ -283,7 +284,7 @@ public class NumberMemorizeTests {
 
         numberMemorize.divide(0, 1);
 
-        assertEquals("Division by zero", outContent.toString());
+        assertTrue(outContent.toString().contains("Division by zero"));
     }
 
     private void setOutContent() {

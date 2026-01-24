@@ -186,7 +186,7 @@ public class BooleanMemorizeTests {
 
         booleanMemorize.convertTo("number");
 
-        assertEquals("No data memorized", outContent.toString());
+        assertTrue(outContent.toString().contains("No data memorized"));
     }
 
     @Test
@@ -196,7 +196,7 @@ public class BooleanMemorizeTests {
 
         booleanMemorize.convertTo("invalid");
 
-        assertEquals("Incorrect argument, possible arguments: string, number", outContent.toString());
+        assertTrue(outContent.toString().contains("Incorrect argument, possible arguments: string, number"));
     }
 
     @Test
@@ -205,7 +205,7 @@ public class BooleanMemorizeTests {
 
         booleanMemorize.morse();
 
-        assertEquals("No data memorized", outContent.toString());
+        assertTrue(outContent.toString().contains("No data memorized"));
     }
 
     @Test

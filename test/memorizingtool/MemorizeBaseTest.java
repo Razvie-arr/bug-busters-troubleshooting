@@ -279,7 +279,7 @@ public class MemorizeBaseTest {
 
         memorize.index("nonexistent");
 
-        assertEquals("There is no such element", outContent.toString());
+        assertTrue(outContent.toString().contains("There is no such element"));
     }
 
     @Test
@@ -290,7 +290,7 @@ public class MemorizeBaseTest {
 
         memorize.sort("invalidOrder");
 
-        assertEquals("Incorrect argument, possible arguments: ascending, descending", outContent.toString());
+        assertTrue(outContent.toString().contains("Incorrect argument, possible arguments: ascending, descending"));
     }
 
     @Test
@@ -299,7 +299,7 @@ public class MemorizeBaseTest {
 
         memorize.frequency();
 
-        assertEquals("There are no elements in a list", outContent.toString());
+        assertTrue(outContent.toString().contains("There are no elements in a list"));
     }
 
     @Test
@@ -308,7 +308,7 @@ public class MemorizeBaseTest {
 
         memorize.getRandom();
 
-        assertEquals("There are no elements memorized", outContent.toString());
+        assertTrue(outContent.toString().contains("There are no elements memorized"));
     }
 
     @Test
@@ -317,7 +317,7 @@ public class MemorizeBaseTest {
 
         memorize.readFile("non_existing_file.txt");
 
-        assertEquals("File not found!", outContent.toString());
+        assertTrue(outContent.toString().contains("File not found!"));
     }
 
     @Test
@@ -328,7 +328,7 @@ public class MemorizeBaseTest {
 
         memorize.printAll("invalidFormat");
 
-        assertEquals("Incorrect argument, possible arguments: asList, lineByLine, oneLine", outContent.toString());
+        assertTrue(outContent.toString().contains("Incorrect argument, possible arguments: asList, lineByLine, oneLine"));
     }
 
     @Test

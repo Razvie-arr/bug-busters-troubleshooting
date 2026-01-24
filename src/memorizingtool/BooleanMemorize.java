@@ -1,5 +1,6 @@
 package memorizingtool;//Chapter 1
 
+import memorizingtool.exception.BooleanCannotBeParsedException;
 import memorizingtool.file.FileReaderBase;
 import memorizingtool.file.FileReaderBoolean;
 import memorizingtool.printer.help.BooleanHelpPrinter;
@@ -46,9 +47,9 @@ public final class BooleanMemorize extends MemorizeBase<Boolean> {
 
     @Override
     protected Boolean parseElement(String value) {
-//        if (!"true".equalsIgnoreCase(value) && !"false".equalsIgnoreCase(value)) {
-//            throw new CannotBeParsedException();
-//        }
+        if (!"true".equalsIgnoreCase(value) && !"false".equalsIgnoreCase(value)) {
+            throw new BooleanCannotBeParsedException();
+        }
         return Boolean.valueOf(value);
     }
 
@@ -80,6 +81,11 @@ public final class BooleanMemorize extends MemorizeBase<Boolean> {
     }
 
     void convertTo(String type) {
+        if (list.isEmpty()) {
+            System.out.println("No data memorized");
+            return;
+        }
+
         StringBuilder binary = new StringBuilder();
         for (boolean b : list) {
             if (b) {
@@ -107,10 +113,17 @@ public final class BooleanMemorize extends MemorizeBase<Boolean> {
                 String asciiSequence = sb.toString();
                 System.out.println("Converted: " + asciiSequence);
                 break;
+            default:
+                System.out.println("Incorrect argument, possible arguments: string, number");
         }
     }
 
     void morse() {
+        if (list.isEmpty()) {
+            System.out.println("No data memorized");
+            return;
+        }
+
         StringBuilder morseCode = new StringBuilder("Morse code: ");
         for (boolean b : list) {
             if (b) {

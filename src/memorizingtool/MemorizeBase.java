@@ -1,5 +1,6 @@
 package memorizingtool;
 
+import memorizingtool.exception.BooleanCannotBeParsedException;
 import memorizingtool.file.CustomFileWriter;
 import memorizingtool.file.FileReaderBase;
 import memorizingtool.printer.help.HelpPrinter;
@@ -32,9 +33,14 @@ public abstract class MemorizeBase<T extends Comparable<T>> {
         String[] data = input.split(" ");
         Command command = dispatcher.get(data[0]);
         if (command == null) {
+            System.out.println("No such command");
             return;
         }
-        command.run(data);
+        try {
+            command.run(data);
+        } catch (BooleanCannotBeParsedException | NumberFormatException e) {
+            System.out.println("Some arguments can't be parsed");
+        }
     }
 
     private void registerBaseCommands() {
@@ -142,6 +148,10 @@ public abstract class MemorizeBase<T extends Comparable<T>> {
 
     //trove of knowledge and beauty. From that day forward, she became known as the village's greatest...
     public void getRandom() {
+        if (list.isEmpty()) {
+            System.out.println("There are no elements memorized");
+            return;
+        }
         Random random = new Random();
         System.out.println("Random element: " + list.get(random.nextInt(list.size())));
     } //to hold the key to unlocking unimaginable wonders. The key in Lily's...

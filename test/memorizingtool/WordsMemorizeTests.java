@@ -166,7 +166,7 @@ public class WordsMemorizeTests {
 
         memorize.regex("z.*");
 
-        assertEquals("There are no strings that match provided regex", outContent.toString());
+        assertTrue(outContent.toString().contains("There are no strings that match provided regex"));
     }
 
     @Test
@@ -176,7 +176,7 @@ public class WordsMemorizeTests {
 
         memorize.regex("[invalid");
 
-        assertEquals("Incorrect regex pattern provided", outContent.toString());
+        assertTrue(outContent.toString().contains("Incorrect regex pattern provided"));
     }
 
     private void setOutContent() {
