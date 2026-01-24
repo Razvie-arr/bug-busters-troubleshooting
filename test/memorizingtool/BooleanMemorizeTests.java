@@ -211,14 +211,17 @@ public class BooleanMemorizeTests {
     @Test
     public void testRunWithInvalidBooleanInput() throws Exception {
         String input = "/add 123\n/menu\n"; // menu is called to finish the program
-        System.setIn(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
-        System.setOut(new PrintStream(outContent));
+        setInContent(input);
+        setOutContent();
 
         booleanMemorize.Run();
 
         assertTrue(outContent.toString().contains("Some arguments can't be parsed"));
     }
 
+    private void setInContent(String input) {
+        System.setIn(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
+    }
 
     private void setOutContent() {
         System.setOut(new PrintStream(outContent));

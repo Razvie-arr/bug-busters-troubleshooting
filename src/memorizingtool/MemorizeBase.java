@@ -24,12 +24,17 @@ public abstract class MemorizeBase<T extends Comparable<T>> {
         Scanner scanner = new Scanner(System.in);
         while (!finished) {
             System.out.println("Perform action:");
-            String[] data = scanner.nextLine().split(" ");
-            Command command = dispatcher.get(data[0]);
-            if (command != null) {
-                command.run(data);
-            }
+            runCommand(scanner.nextLine());
         }
+    }
+
+    private void runCommand(String input) throws Exception {
+        String[] data = input.split(" ");
+        Command command = dispatcher.get(data[0]);
+        if (command == null) {
+            return;
+        }
+        command.run(data);
     }
 
     private void registerBaseCommands() {

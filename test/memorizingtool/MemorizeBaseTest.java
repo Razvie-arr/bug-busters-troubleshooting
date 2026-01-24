@@ -6,9 +6,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -19,17 +18,20 @@ public class MemorizeBaseTest {
     private TestMemorizeImpl memorize;
     private ByteArrayOutputStream outContent;
     private PrintStream originalOut;
+    private InputStream originalIn;
 
     @Before
     public void setUp() {
         memorize = new TestMemorizeImpl();
         outContent = new ByteArrayOutputStream();
         originalOut = System.out;
+        originalIn = System.in;
     }
 
     @After
     public void tearDown() {
         System.setOut(originalOut);
+        System.setIn(originalIn);
     }
 
     @Test
@@ -327,6 +329,56 @@ public class MemorizeBaseTest {
         memorize.printAll("invalidFormat");
 
         assertEquals("Incorrect argument, possible arguments: asList, lineByLine, oneLine", outContent.toString());
+    }
+
+    @Test
+    public void testNoSuchCommand() throws Exception {
+        String input = "/nonExistingCommand 123\n/menu\n";
+        setInContent(input);
+        setOutContent();
+
+        memorize.Run();
+
+        assertTrue(outContent.toString().contains("No such command"));
+    }
+
+    @Test
+    public void testIncorrectAmountOfArguments() throws Exception {
+        String input = "/add hello world\n/menu\n"; // should be 1 argument only
+        setInContent(input);
+        setOutContent();
+
+        memorize.Run();
+
+        assertTrue(outContent.toString().contains("Incorrect amount of arguments"));
+    }
+
+    @Test
+    public void testIndexOutOfBounds() throws Exception {
+        memorize.add("apple");
+        String input = "/print 100\n/menu\n";
+        setInContent(input);
+        setOutContent();
+
+        memorize.Run();
+
+        assertTrue(outContent.toString().contains("Index out of bounds!"));
+    }
+
+    @Test
+    public void testNumberFormatExceptionHandled() throws Exception {
+        String input = "/print apple\n/menu\n";
+        setInContent(input);
+        setOutContent();
+
+        memorize.Run();
+
+        assertTrue(outContent.toString().contains("Some arguments can't be parsed!"));
+    }
+
+
+    private void setInContent(String input) {
+        System.setIn(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
     }
 
     private void setOutContent() {
