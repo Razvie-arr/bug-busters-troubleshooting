@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * Continuing with our theme of memorization, this class is designed to help us remember words or strings.
@@ -98,15 +99,24 @@ public final class WordMemorize extends MemorizeBase<String> {
 
     void regex(String regex) {
         List<String> matchingElements = new ArrayList<>();
-        Pattern pattern;
-        pattern = Pattern.compile(regex);
-        for (String element : list) {
-            if (pattern.matcher(element).matches()) {
-                matchingElements.add(element);
+        try {
+            Pattern pattern = Pattern.compile(regex);
+            for (String element : list) {
+                if (pattern.matcher(element).matches()) {
+                    matchingElements.add(element);
+                }
             }
+            
+            if (matchingElements.isEmpty()) {
+                System.out.println("There are no strings that match provided regex");
+                return;
+            }
+
+            System.out.println("Strings that match provided regex:");
+            System.out.println(Arrays.toString(matchingElements.toArray()));
+        } catch (PatternSyntaxException e) {
+            System.out.println("Incorrect regex pattern provided");
         }
-        System.out.println("Strings that match provided regex:");
-        System.out.println(Arrays.toString(matchingElements.toArray()));
     }
 
 }

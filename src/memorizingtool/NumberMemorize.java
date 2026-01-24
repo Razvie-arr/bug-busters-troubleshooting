@@ -81,6 +81,11 @@ public final class NumberMemorize extends MemorizeBase<Integer> {
     void divide(int i, int j) {
         BigDecimal a = BigDecimal.valueOf(list.get(i));
         BigDecimal b = BigDecimal.valueOf(list.get(j));
+        if (b.equals(BigDecimal.ZERO)) {
+            System.out.println("Division by zero");
+            return;
+        }
+
         BigDecimal res = a.divide(b, 6, RoundingMode.HALF_UP).stripTrailingZeros();
         System.out.printf("Calculation performed: %s / %s = %s%n", a.toPlainString(), b.toPlainString(), res.toPlainString());
     }
@@ -100,6 +105,10 @@ public final class NumberMemorize extends MemorizeBase<Integer> {
 
     void factorial(int index) {
         int number = list.get(index);
+        if (number < 0) {
+            System.out.println("\"undefined\"");
+            return;
+        }
         long res = 1;
         if (number != 0 && number != 1) {
             int i = 2;

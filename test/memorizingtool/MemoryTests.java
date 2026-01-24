@@ -32,7 +32,7 @@ public class MemoryTests {
 
     @Test
     public void testIncorrectChoiceInMenu() throws Exception {
-        String incorrectChoice = "9";
+        String incorrectChoice = "/9";
 
         try (ByteArrayInputStream in = new ByteArrayInputStream(incorrectChoice.getBytes())) {
             System.setIn(in);

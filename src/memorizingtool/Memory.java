@@ -23,7 +23,10 @@ class Memory {
                     2. Memorize numbers
                     3. Memorize words
                     0. Quit""");
-            String choice = scanner.next();
+            if (!scanner.hasNextLine()) {
+                return;
+            }
+            String choice = scanner.nextLine().trim();
             switch (choice) {
                 case "1":
                     new BooleanMemorize().Run();
